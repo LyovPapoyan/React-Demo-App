@@ -11,9 +11,11 @@ function App() {
   return (
     <div>
       <Header />
-      <Product name="Apple" price="300" description="Green apple from Armenia" />
+      <Product name="Nike" price="300 USD" description="Sneakers (Made in Thailand)" />
       <hr/>
-      <Product name="Mango" price="1200" description=" Mango from Armenia" />
+      <Product name="Adidas" price="120 USD" description="Sneakers (Made in Germany)" />
+      <hr/>
+      <Product name="Puma" price="50000 AMD" description="Sneakers (Made in China)" />
     </div>
   );
 }
