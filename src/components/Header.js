@@ -1,8 +1,7 @@
 import React from 'react';
 
+const  Header = () => {
+    return <h1>Todo List</h1>;
+} 
 
-const Header = () => {
-    return <h1>Welcome to User list!!!</h1>;
-}
-
-export default Header;
+export default Header
