@@ -17,7 +17,7 @@ export default class Todo extends React.Component {
     }
 
     task = () => {
-         let task = this.state.tasks;
+         let task = [...this.state.tasks];
          task.unshift(this.state.inpValue);
 
          this.setState({
