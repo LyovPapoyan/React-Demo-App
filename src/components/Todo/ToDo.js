@@ -1,13 +1,13 @@
 import React from 'react';
 import idGenerator from '../Helpers/Helper';
 
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 
 import Input from '../Input/Input';
 import Task from '../Task/Task';
 
 
-export default class Todo extends React.Component {
+export default class Todo extends React.PureComponent {
 
 
     state = {
@@ -52,7 +52,7 @@ export default class Todo extends React.Component {
       );
       
         return (
-             <>
+             <Container>
                 <Row>
                     <Col>
                         <Input onAdd={this.addTask}/>
@@ -64,7 +64,7 @@ export default class Todo extends React.Component {
                         taskCards
                     }
                 </Row>
-            </>
+            </Container>
         )
     }
 }
