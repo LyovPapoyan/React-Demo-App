@@ -1,0 +1,12 @@
+.checkbox {
+    margin: 10px;
+}
+
+.card {
+    width: 20rem;
+    margin: 0 auto 20px;
+}
+
+.checked {
+    border: 1px solid red;
+}

@@ -1,17 +1,20 @@
 import React from 'react';
 import idGenerator from '../Helpers/Helper';
 
-import { Row, Col, Container } from 'react-bootstrap';
+import { Row, Col, Container, Button } from 'react-bootstrap';
 
 import Input from '../Input/Input';
 import Task from '../Task/Task';
+import Confirm from '../Confirm';
 
 
 export default class Todo extends React.PureComponent {
 
 
     state = {
-        tasks: []
+        tasks: [],
+        checkedTasks: [],
+        showConfirm: false
     };
     
 
@@ -39,6 +42,42 @@ export default class Todo extends React.PureComponent {
        }
     }
 
+    handleCheck = (taskId) => () => {
+        const checkedTasks = new Set(this.state.checkedTasks);
+
+        if(checkedTasks.has(taskId)){
+            checkedTasks.delete(taskId);
+        } else {
+            checkedTasks.add(taskId);
+        }
+
+        this.setState({
+            checkedTasks:checkedTasks
+        });
+    }
+
+    removeSelected = () => {
+        const checkedTasks = new Set(this.state.checkedTasks);
+         let tasks = [...this.state.tasks]
+
+        for (const checkTaskId of checkedTasks) {
+           tasks = tasks.filter(task => task.id !== checkTaskId)
+        };
+
+        checkedTasks.clear();
+        this.setState({
+            tasks,
+            checkedTasks,
+            showConfirm: false
+        });
+    }
+
+    toggleConfirm = ()=>{
+        this.setState({
+            showConfirm: !this.state.showConfirm
+        });
+    };
+
     render() {
 
       let taskCards = this.state.tasks
@@ -46,7 +85,8 @@ export default class Todo extends React.PureComponent {
         <Col key={item.id}>
            <Task 
            data = {item}
-            removeTask={this.deleted}
+           removeTask={this.deleted}
+           onCheck={this.handleCheck(item.id)}
            />
        </Col>
       );
@@ -64,6 +104,24 @@ export default class Todo extends React.PureComponent {
                         taskCards
                     }
                 </Row>
+
+                <Row className="justify-content-center">
+                    <Button variant="danger"
+                       disabled={this.state.checkedTasks.size? false : true}
+                       onClick={this.toggleConfirm}
+                     >
+                      Remove Selected Tasks
+                    </Button>
+                </Row>
+
+                    { this.state.showConfirm ?
+                      <Confirm 
+                        count = {this.state.checkedTasks.size}
+                        onSubmit = {this.removeSelected}
+                        onCancel = {this.toggleConfirm}
+                     />
+                     : false
+                    }
             </Container>
         )
     }
