@@ -1,4 +1,5 @@
  import React from 'react';
+import PropTypes from 'prop-types';
 import { InputGroup, Button , FormControl,  Col, Row } from 'react-bootstrap';
 
 export default class Input extends React.PureComponent {
@@ -61,4 +62,8 @@ export default class Input extends React.PureComponent {
             </Row>
         );       
     }
+}
+
+Input.propTypes = {
+    onAdd: PropTypes.func.isRequired
 }

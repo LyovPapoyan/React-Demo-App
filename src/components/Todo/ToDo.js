@@ -6,6 +6,7 @@ import { Row, Col, Container, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import Task from '../Task/Task';
 import Confirm from '../Confirm';
+import Modal from '../Modal';
 
 
 export default class Todo extends React.PureComponent {
@@ -13,8 +14,9 @@ export default class Todo extends React.PureComponent {
 
     state = {
         tasks: [],
-        checkedTasks: [],
-        showConfirm: false
+        checkedTasks: new Set(),
+        showConfirm: false,
+        editTask: null
     };
     
 
@@ -37,7 +39,8 @@ export default class Todo extends React.PureComponent {
         return () => {
             let newArr =  this.state.tasks.filter((item) => id !== item.id);
              this.setState({
-              tasks: newArr
+              tasks: newArr,
+              
          });
        }
     }
@@ -78,6 +81,27 @@ export default class Todo extends React.PureComponent {
         });
     };
 
+    handleSave = (taskId, value)=>{
+        
+        const tasks = [...this.state.tasks];
+
+        const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+        tasks[taskIndex] = {
+            ...tasks[taskIndex],
+            text: value
+        };
+
+        this.setState({
+            tasks: tasks,
+            editTask: null
+        });
+    };
+
+    handleEdit = (task) => () => {
+        this.setState({ editTask: task });
+    };
+
     render() {
 
       let taskCards = this.state.tasks
@@ -87,6 +111,7 @@ export default class Todo extends React.PureComponent {
            data = {item}
            removeTask={this.deleted}
            onCheck={this.handleCheck(item.id)}
+           onEdit = {this.handleEdit(item)}
            />
        </Col>
       );
@@ -122,6 +147,15 @@ export default class Todo extends React.PureComponent {
                      />
                      : false
                     }
+  
+                    {!!this.state.editTask && 
+                    <Modal 
+                    value={this.state.editTask}
+                    onSave = {this.handleSave}
+                    onCancel = {this.handleEdit(null)}
+                    />
+                   }
+                    
             </Container>
         )
     }
