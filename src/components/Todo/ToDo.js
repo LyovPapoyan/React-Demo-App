@@ -112,6 +112,7 @@ export default class Todo extends React.PureComponent {
            removeTask={this.deleted}
            onCheck={this.handleCheck(item.id)}
            onEdit = {this.handleEdit(item)}
+           disabled = {this.state.checkedTasks.size? true : false}
            />
        </Col>
       );
@@ -120,7 +121,10 @@ export default class Todo extends React.PureComponent {
              <Container>
                 <Row>
                     <Col>
-                        <Input onAdd={this.addTask}/>
+                        <Input 
+                        onAdd={this.addTask}
+                        disabled = {this.state.checkedTasks.size? true : false}
+                        />
                     </Col>
                 </Row>
                 

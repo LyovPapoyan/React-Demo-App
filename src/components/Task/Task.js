@@ -42,11 +42,17 @@ export default class Task extends React.PureComponent {
                     {this.props.data.text}
                 </Card.Text>
 
-                <Button  className = 'm-1' variant="info" onClick={this.props.onEdit}>
+                <Button  className = 'm-1' 
+                variant="info" 
+                onClick={this.props.onEdit}
+                disabled={this.props.disabled}>
                     <FontAwesomeIcon icon={faEdit} />
                     </Button>
 
-                <Button variant="danger" onClick={ this.props.removeTask(this.props.data.id)}>
+                <Button 
+                variant="danger" 
+                onClick={ this.props.removeTask(this.props.data.id)}
+                disabled={this.props.disabled}> 
                     <FontAwesomeIcon icon={faTrash}/>
                 </Button>
         </Card.Body>

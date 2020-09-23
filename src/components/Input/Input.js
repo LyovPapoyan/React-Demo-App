@@ -55,7 +55,11 @@ export default class Input extends React.PureComponent {
                         placeholder="Enter the new Task"    
                     />
                     <InputGroup.Append>
-                        <Button variant="outline-primary" onClick={this.sendInputValue}>Add Task</Button>
+                        <Button variant="outline-primary" 
+                        onClick={this.sendInputValue} 
+                        disabled={this.props.disabled}>
+                        Add Task
+                        </Button>
                     </InputGroup.Append>
                 </InputGroup> 
              </Col>
