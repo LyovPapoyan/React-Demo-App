@@ -103,7 +103,7 @@ export default class Todo extends React.PureComponent {
     };
 
     render() {
-
+      let size = this.state.checkedTasks.size;
       let taskCards = this.state.tasks
       .map((item) => 
         <Col key={item.id}>
@@ -112,7 +112,7 @@ export default class Todo extends React.PureComponent {
            removeTask={this.deleted}
            onCheck={this.handleCheck(item.id)}
            onEdit = {this.handleEdit(item)}
-           disabled = {this.state.checkedTasks.size? true : false}
+           disabled = {size? true : false}
            />
        </Col>
       );
@@ -123,7 +123,7 @@ export default class Todo extends React.PureComponent {
                     <Col>
                         <Input 
                         onAdd={this.addTask}
-                        disabled = {this.state.checkedTasks.size? true : false}
+                        disabled = {size? true : false}
                         />
                     </Col>
                 </Row>
@@ -136,7 +136,7 @@ export default class Todo extends React.PureComponent {
 
                 <Row className="justify-content-center">
                     <Button variant="danger"
-                       disabled={this.state.checkedTasks.size? false : true}
+                       disabled={size? false : true}
                        onClick={this.toggleConfirm}
                      >
                       Remove Selected Tasks
@@ -145,7 +145,7 @@ export default class Todo extends React.PureComponent {
 
                     { this.state.showConfirm ?
                       <Confirm 
-                        count = {this.state.checkedTasks.size}
+                        count = {size}
                         onSubmit = {this.removeSelected}
                         onCancel = {this.toggleConfirm}
                      />
