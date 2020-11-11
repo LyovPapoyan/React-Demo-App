@@ -5,7 +5,7 @@ import { Row, Col, Container, Button } from 'react-bootstrap';
 import NewTaskModal from '../NewTaskModal/NewTaskMOdal';
 import Task from '../Task/Task';
 import Confirm from '../Confirm';
-import Modal from '../Modal';
+import EditTaskModal from '../EditTaskModal';
 import styles from './Todo.module.css'
 
 export default class Todo extends React.PureComponent {
@@ -34,13 +34,10 @@ export default class Todo extends React.PureComponent {
     }
 
 
-    addTask = (inpValue) => {
+    addTask = (newTask) => {
 
         let tasks = [...this.state.tasks];
 
-        const newTask = {
-            title: inpValue
-        }
 
         fetch("http://localhost:3001/task", {
             method: "POST",
@@ -55,18 +52,25 @@ export default class Todo extends React.PureComponent {
                     tasks: [task, ...tasks],
                     openNewTaskModal: false
                 })
-                console.log(task);
             })
             .catch(err => console.log(err.message));
     }
-    
+
     deleted = id => {
         return () => {
-            let newArr = this.state.tasks.filter((item) => id !== item._id);
-            this.setState({
-                tasks: newArr,
-
-            });
+            fetch(`http://localhost:3001/task/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) throw data.error;
+                    let newArr = this.state.tasks.filter((item) => id !== item._id);
+                    this.setState({
+                        tasks: newArr,
+                    });
+                })
+                .catch(err => console.log(err.message));
         }
     }
 
@@ -86,18 +90,31 @@ export default class Todo extends React.PureComponent {
 
     removeSelected = () => {
         const checkedTasks = new Set(this.state.checkedTasks);
-        let tasks = [...this.state.tasks]
 
-        for (const checkTaskId of checkedTasks) {
-            tasks = tasks.filter(task => task._id !== checkTaskId)
-        };
+        fetch(`http://localhost:3001/task`, {
+            method: "DELETE",      // Patch - update server 
+            body: JSON.stringify({
+                tasks: [...checkedTasks]
+            }),
+            headers: { "Content-Type": "application/json" }
+        })
+        .then((response) => response.json())
+        .then((data) =>  {
+            if (data.error) throw data.error;
+            let tasks = [...this.state.tasks]
 
-        checkedTasks.clear();
-        this.setState({
-            tasks,
-            checkedTasks,
-            showConfirm: false
-        });
+            for (const checkTaskId of checkedTasks) {
+                tasks = tasks.filter(task => task._id !== checkTaskId)
+            };
+    
+            checkedTasks.clear();
+            this.setState({
+                tasks,
+                checkedTasks,
+                showConfirm: false
+            });
+        })
+        .catch(err => console.log(err.message));
     }
 
     toggleConfirm = () => {
@@ -106,21 +123,28 @@ export default class Todo extends React.PureComponent {
         });
     };
 
-    handleSave = (taskId, value) => {
+    handleSave = (taskId, data) => {
 
-        const tasks = [...this.state.tasks];
+        fetch(`http://localhost:3001/task/${taskId}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(response => response.json())
+            .then(editedTask => {
+                if (editedTask.error) throw editedTask.error;
 
-        const taskIndex = tasks.findIndex(task => task._id === taskId);
+                const tasks = [...this.state.tasks];
+                const foundIndex = tasks.findIndex(el => el._id === editedTask._id);
+                tasks[foundIndex] = editedTask;
 
-        tasks[taskIndex] = {
-            ...tasks[taskIndex],
-            text: value
-        };
-
-        this.setState({
-            tasks: tasks,
-            editTask: null
-        });
+                this.setState({
+                    tasks,
+                    editTask: null
+                })
+            })
+            .catch(err => console.log(err.message));
+     
     };
 
     handleEdit = (task) => () => {
@@ -190,7 +214,8 @@ export default class Todo extends React.PureComponent {
                 }
 
                 {!!this.state.editTask &&
-                    <Modal
+                    <EditTaskModal
+                        data = {this.state.editTask}
                         value={this.state.editTask}
                         onSave={this.handleSave}
                         onCancel={this.handleEdit(null)}

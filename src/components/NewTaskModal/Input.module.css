@@ -1,0 +1,9 @@
+.invalid {
+    border: 1px solid red;
+}
+
+.errorMsg {
+    color: red;
+    margin-top: 5px;
+    margin-left: 10px;
+}

@@ -39,7 +39,10 @@ export default class Task extends React.PureComponent {
                 <Card.Header>{this.props.data.title}</Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        {this.props.data.description}
+                      Description:  {this.props.data.description}
+                    </Card.Text>
+                    <Card.Text>
+                      Date:  {this.props.data.date ? this.props.data.date.slice(0, 10) : "none"}
                     </Card.Text>
 
                     <Button className='m-1'
@@ -51,7 +54,7 @@ export default class Task extends React.PureComponent {
 
                     <Button
                         variant="danger"
-                        onClick={this.props.removeTask(this.props.data.id)}
+                        onClick={this.props.removeTask(this.props.data._id)}
                         disabled={this.props.disabled}>
                         <FontAwesomeIcon icon={faTrash} />
                     </Button>
