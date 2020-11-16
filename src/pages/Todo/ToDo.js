@@ -2,11 +2,10 @@ import React from 'react';
 
 import { Row, Col, Container, Button } from 'react-bootstrap';
 
-import NewTaskModal from '../NewTaskModal/NewTaskMOdal';
-import Task from '../Task/Task';
-import Confirm from '../Confirm';
-import EditTaskModal from '../EditTaskModal';
-import styles from './Todo.module.css'
+import NewTaskModal from '../../components/NewTaskModal/NewTaskMOdal';
+import Task from '../../components/Task/Task';
+import Confirm from '../../components/Confirm';
+import EditTaskModal from '../../components/EditTaskModal';
 
 export default class Todo extends React.PureComponent {
 
@@ -21,7 +20,10 @@ export default class Todo extends React.PureComponent {
 
     componentDidMount() {
         fetch("http://localhost:3001/task", {
-
+            method: "GET",
+            headers: {
+                "Content-type": "application/json"
+            }
         })
             .then(response => response.json())
             .then(tasks => {
@@ -90,31 +92,31 @@ export default class Todo extends React.PureComponent {
 
     removeSelected = () => {
         const checkedTasks = new Set(this.state.checkedTasks);
-
-        fetch(`http://localhost:3001/task`, {
-            method: "DELETE",      // Patch - update server 
+        console.log();
+        fetch(`http://localhost:3001/task/`, {
+            method: "PATCH",      // Patch - update server 
             body: JSON.stringify({
                 tasks: [...checkedTasks]
             }),
             headers: { "Content-Type": "application/json" }
         })
-        .then((response) => response.json())
-        .then((data) =>  {
-            if (data.error) throw data.error;
-            let tasks = [...this.state.tasks]
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) throw data.error;
+                let tasks = [...this.state.tasks]
 
-            for (const checkTaskId of checkedTasks) {
-                tasks = tasks.filter(task => task._id !== checkTaskId)
-            };
-    
-            checkedTasks.clear();
-            this.setState({
-                tasks,
-                checkedTasks,
-                showConfirm: false
-            });
-        })
-        .catch(err => console.log(err.message));
+                for (const checkTaskId of checkedTasks) {
+                    tasks = tasks.filter(task => task._id !== checkTaskId)
+                };
+
+                checkedTasks.clear();
+                this.setState({
+                    tasks,
+                    checkedTasks,
+                    showConfirm: false
+                });
+            })
+            .catch(err => console.log(err.message));
     }
 
     toggleConfirm = () => {
@@ -144,7 +146,7 @@ export default class Todo extends React.PureComponent {
                 })
             })
             .catch(err => console.log(err.message));
-     
+
     };
 
     handleEdit = (task) => () => {
@@ -177,10 +179,9 @@ export default class Todo extends React.PureComponent {
         return (
             <Container>
                 <Row>
-                    <Col>
+                    <Col className="text-center m-3">
                         <Button
                             variant="primary"
-                            className={styles.addTaskBtn}
                             disabled={size}
                             onClick={this.toggleNewTaskModal}
                         >
@@ -195,15 +196,16 @@ export default class Todo extends React.PureComponent {
                     }
                 </Row>
 
-                <Row className="justify-content-center">
-                    <Button variant="danger"
-                        disabled={size ? false : true}
-                        onClick={this.toggleConfirm}
-                    >
-                        Remove Selected Tasks
+                { this.state.tasks.length !== 0 &&
+                    <Row className="justify-content-center">
+                        <Button variant="danger"
+                            disabled={size ? false : true}
+                            onClick={this.toggleConfirm}
+                        >
+                            Remove Selected Tasks
                     </Button>
-                </Row>
-
+                    </Row>
+                }
                 { this.state.showConfirm ?
                     <Confirm
                         count={size}
@@ -215,7 +217,7 @@ export default class Todo extends React.PureComponent {
 
                 {!!this.state.editTask &&
                     <EditTaskModal
-                        data = {this.state.editTask}
+                        data={this.state.editTask}
                         value={this.state.editTask}
                         onSave={this.handleSave}
                         onCancel={this.handleEdit(null)}

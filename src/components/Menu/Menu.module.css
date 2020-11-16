@@ -3,6 +3,7 @@
     color: aliceblue;
 }
 
-.search {
-    
+.isActive {
+    color: blue;
+    font-weight: bold;
 }
