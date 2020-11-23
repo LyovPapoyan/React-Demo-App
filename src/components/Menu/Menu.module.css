@@ -1,0 +1,9 @@
+ a{
+    margin-left: 20px;
+    color: aliceblue;
+}
+
+.isActive {
+    color: blue;
+    font-weight: bold;
+}

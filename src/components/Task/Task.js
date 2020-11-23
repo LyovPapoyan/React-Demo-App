@@ -5,6 +5,8 @@ import { Button, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styles from "./Task.module.css";
+import { Link } from 'react-router-dom';
+
 
 export default class Task extends React.PureComponent {
 
@@ -36,10 +38,15 @@ export default class Task extends React.PureComponent {
                     className={styles.checkbox}
                     onClick={this.toggleCheckbox}
                 />
-                <Card.Header>{this.props.data.title}</Card.Header>
+                <Link to={`/task/${this.props.data._id}`}>
+                    <Card.Header className={styles.card_header}>Title: {this.props.data.title}</Card.Header>
+                </Link>
                 <Card.Body>
                     <Card.Text>
-                        {this.props.data.description}
+                        Description:  {this.props.data.description}
+                    </Card.Text>
+                    <Card.Text>
+                        Date:  {this.props.data.date ? this.props.data.date.slice(0, 10) : "none"}
                     </Card.Text>
 
                     <Button className='m-1'
@@ -51,7 +58,7 @@ export default class Task extends React.PureComponent {
 
                     <Button
                         variant="danger"
-                        onClick={this.props.removeTask(this.props.data.id)}
+                        onClick={this.props.removeTask(this.props.data._id)}
                         disabled={this.props.disabled}>
                         <FontAwesomeIcon icon={faTrash} />
                     </Button>

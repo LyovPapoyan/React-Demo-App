@@ -1,17 +1,36 @@
 import React, { PureComponent } from 'react';
-import { FormControl, Button, Modal } from 'react-bootstrap';
+import { FormControl, Button, Modal, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import styles from './Input.module.css'
+
 
 class NewTaskModal extends PureComponent {
     state = {
         title: '',
         description: '',
-        date: ''
+        date: new Date(),
+        valid: true,
+        validationType: null
     };
 
-    handleChange = (event) => {
+    validationErrors = {
+        requiredError: 'The field is required!',
+        lengthError: 'The title length should be less than 30 characters'
+    }
+
+    handleChange = (type, value) => {
+
+        if(type === 'title' && !this.state.valid) {
+            this.setState({
+                [type]: value,
+                valid: true
+            });
+        }
+
         this.setState({
-            title: event.target.value
+            [type]: value
         });
     };
 
@@ -24,13 +43,41 @@ class NewTaskModal extends PureComponent {
 
     handleSave = () => {
 
-        const { title } = this.state;
-        if (title) {
-            this.props.onAdd(title);
+        let { title, description, date } = this.state;
+        title = title.trim();
+
+        if (!title) {
+            this.setState({
+                valid: false,
+                 validationType: 'requiredError'
+            })
+            return;
+        };
+
+
+        if (title.length > 30) {
+            this.setState({
+                valid: false,
+                validationType: 'lengthError'
+            })
+            return;
+        };
+
+        const data = {
+            title,
+            description,
+            date: date.toISOString().slice(0, 10)
         }
+        this.props.onAdd(data);
     }
 
     render() {
+
+        let errorMsg = '';
+
+        if(!this.state.valid) {
+            errorMsg = this.validationErrors[this.state.validationType];
+        }
 
         return (
             <Modal
@@ -47,11 +94,21 @@ class NewTaskModal extends PureComponent {
                 </Modal.Header>
                 <Modal.Body>
                     <FormControl
-                        onChange={this.handleChange}
+                        className={!this.state.valid ? styles.invalid : null}
+                        onChange={(event) => this.handleChange('title', event.target.value)}
                         onKeyDown={this.handleKeyDown}
-                        placeholder="Input task"
-                        aria-label="Input task"
+                        placeholder="Title"
+                        aria-label="Title"
                         aria-describedby="basic-addon2"
+                    />
+                    <p className={styles.errorMsg}>{errorMsg}</p>
+                    <Form.Control as="textarea" className="my-3" rows={3}
+                        placeholder="Description"
+                        onChange={(event) => this.handleChange('description', event.target.value)}
+                    />
+                    <DatePicker selected={this.state.date}
+                        minDate={new Date()}
+                        onChange={(value) => this.handleChange('date', value)}
                     />
                 </Modal.Body>
                 <Modal.Footer>
@@ -72,84 +129,3 @@ NewTaskModal.propTypes = {
 };
 
 export default NewTaskModal;
-
-
-
-
-
-
-
-
-// import React from 'react';
-// import PropTypes from 'prop-types';
-// import { InputGroup, Button, FormControl, Col, Row } from 'react-bootstrap';
-
-// export default class Input extends React.PureComponent {
-
-//     state = {
-//         inpValue: ''
-//     };
-
-
-//     handleChange = (event) => {
-//         this.setState({
-//             inpValue: event.target.value
-//         });
-//     };
-
-//     handleKeydown = (event) => {
-
-//         if (!this.state.inpValue) {
-//             return
-//         };
-
-//         if (event.key === 'Enter') {
-//             this.props.onAdd(this.state.inpValue);
-//             this.setState({
-//                 inpValue: ''
-//             });
-//         };
-//     };
-
-//     sendInputValue = () => {
-
-//         if (!this.state.inpValue) {
-//             return
-//         };
-
-//         this.props.onAdd(this.state.inpValue);
-//         this.setState({
-//             inpValue: ''
-//         });
-//     }
-
-
-//     render() {
-
-//         return (
-//             <Row>
-//                 <Col>
-//                     <InputGroup className="mb-5 mt-4" >
-//                         <FormControl
-//                             value={this.state.inpValue}
-//                             onChange={this.handleChange}
-//                             onKeyDown={this.handleKeydown}
-//                             placeholder="Enter the new Task"
-//                         />
-//                         <InputGroup.Append>
-//                             <Button variant="outline-primary"
-//                                 onClick={this.sendInputValue}
-//                                 disabled={this.props.disabled}>
-//                                 Add Task
-//                         </Button>
-//                         </InputGroup.Append>
-//                     </InputGroup>
-//                 </Col>
-//             </Row>
-//         );
-//     }
-// }
-
-// Input.propTypes = {
-//     onAdd: PropTypes.func.isRequired
-// }
