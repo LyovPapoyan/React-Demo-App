@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Row, Col, Container, Button } from 'react-bootstrap';
 
@@ -7,7 +8,7 @@ import Task from '../../components/Task/Task';
 import Confirm from '../../components/Confirm';
 import EditTaskModal from '../../components/EditTaskModal';
 
-export default class Todo extends React.PureComponent {
+ class Todo extends React.PureComponent {
 
 
     state = {
@@ -230,8 +231,26 @@ export default class Todo extends React.PureComponent {
                         onCancel={this.toggleNewTaskModal}
                     />
                 }
-
+                <div>
+                    <p>{this.props.number}</p>
+                    <button onClick={() => this.props.changeValue(20)}> Change</button>
+                </div>
             </Container>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        number: state.count
+    }
+}
+
+const mapStateToDispatch = (dispatch) => {
+    return {
+        changeValue: (value) => {dispatch({type: "CHANGE_COUNT", value})}
+    }
+}
+
+
+export default connect(mapStateToProps, mapStateToDispatch)(Todo)
