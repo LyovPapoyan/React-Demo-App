@@ -1,4 +1,5 @@
 .spin  {
     display: block;
     margin: 10% auto;
+    z-index: 120;
 }

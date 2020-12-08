@@ -8,11 +8,12 @@ import Task from '../../components/Task/Task';
 import Confirm from '../../components/Confirm';
 import EditTaskModal from '../../components/EditTaskModal';
 
+import {getTasks} from '../../store/actions'
+
  class Todo extends React.PureComponent {
 
 
     state = {
-        tasks: [],
         checkedTasks: new Set(),
         showConfirm: false,
         editTask: null,
@@ -20,44 +21,57 @@ import EditTaskModal from '../../components/EditTaskModal';
     };
 
     componentDidMount() {
-        fetch("http://localhost:3001/task", {
-            method: "GET",
-            headers: {
-                "Content-type": "application/json"
-            }
-        })
-            .then(response => response.json())
-            .then(tasks => {
-                if (tasks.error) throw tasks.error;
-                this.setState({
-                    tasks: tasks
-                })
-            })
-            .catch(err => console.log(err))
+
+        this.props.getTasks();
+        
+        // fetch("http://localhost:3001/task", {
+        //     method: "GET",
+        //     headers: {
+        //         "Content-type": "application/json"
+        //     }
+        // })
+        //     .then(response => response.json())
+        //     .then(tasks => {
+        //         if (tasks.error) throw tasks.error;
+        //         this.setState({
+        //             tasks: tasks
+        //         })
+        //     })
+        //     .catch(err => console.log(err))
     }
 
 
-    addTask = (newTask) => {
-
-        let tasks = [...this.state.tasks];
-
-
-        fetch("http://localhost:3001/task", {
-            method: "POST",
-            body: JSON.stringify(newTask),
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(response => response.json())
-            .then(task => {
-                if (task.error) throw task.error;
-
-                this.setState({
-                    tasks: [task, ...tasks],
-                    openNewTaskModal: false
-                })
+    componentDidUpdate(prevState) {
+        if(!prevState.addTaskSuccess && this.props.addTaskSuccess) {
+            this.setState({
+                openNewTaskModal: false
             })
-            .catch(err => console.log(err.message));
+        }
     }
+
+
+    // addTask = (newTask) => {
+
+    //     let tasks = [...this.state.tasks];
+
+    //     fetch("http://localhost:3001/task", {
+    //         method: "POST",
+    //         body: JSON.stringify(newTask),
+    //         headers: { "Content-Type": "application/json" }
+    //     })
+    //         .then(response => response.json())
+    //         .then(task => {
+    //             if (task.error) throw task.error;
+
+    //             this.setState({
+    //                 tasks: [task, ...tasks],
+    //                 openNewTaskModal: false
+    //             })
+    //         })
+    //         .catch(err => console.log(err.message));
+    // }
+
+
 
     deleted = id => {
         return () => {
@@ -164,7 +178,7 @@ import EditTaskModal from '../../components/EditTaskModal';
 
     render() {
         let size = this.state.checkedTasks.size;
-        let taskCards = this.state.tasks
+        let taskCards = this.props.tasks
             .map((item) =>
                 <Col key={item._id}>
                     <Task
@@ -193,11 +207,11 @@ import EditTaskModal from '../../components/EditTaskModal';
 
                 <Row>
                     {
-                        taskCards
+                      taskCards
                     }
                 </Row>
 
-                { this.state.tasks.length !== 0 &&
+                { this.props.tasks.length !== 0 &&
                     <Row className="justify-content-center">
                         <Button variant="danger"
                             disabled={size ? false : true}
@@ -227,14 +241,9 @@ import EditTaskModal from '../../components/EditTaskModal';
 
                 { this.state.openNewTaskModal &&
                     <NewTaskModal
-                        onAdd={this.addTask}
                         onCancel={this.toggleNewTaskModal}
                     />
                 }
-                <div>
-                    <p>{this.props.number}</p>
-                    <button onClick={() => this.props.changeValue(20)}> Change</button>
-                </div>
             </Container>
         )
     }
@@ -242,15 +251,20 @@ import EditTaskModal from '../../components/EditTaskModal';
 
 const mapStateToProps = (state) => {
     return {
-        number: state.count
+        tasks: state.tasks,
+        addTaskSuccess: state.addTaskSuccess
     }
 }
 
-const mapStateToDispatch = (dispatch) => {
-    return {
-        changeValue: (value) => {dispatch({type: "CHANGE_COUNT", value})}
-    }
+// const mapStateToDispatch = (dispatch) => {
+//     return {
+//         changeValue: (value) => {dispatch({type: "CHANGE_COUNT", value})}
+//     }
+// }
+
+const mapDispatchToProps = {
+    getTasks: getTasks
 }
 
 
-export default connect(mapStateToProps, mapStateToDispatch)(Todo)
+export default connect(mapStateToProps, mapDispatchToProps)(Todo)
