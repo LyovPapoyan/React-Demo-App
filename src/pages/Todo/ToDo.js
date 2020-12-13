@@ -8,7 +8,7 @@ import Task from '../../components/Task/Task';
 import Confirm from '../../components/Confirm';
 import EditTaskModal from '../../components/EditTaskModal';
 
-import {getTasks} from '../../store/actions'
+import {getTasks, removeTasks, editTask} from '../../store/actions'
 
  class Todo extends React.PureComponent {
 
@@ -42,9 +42,22 @@ import {getTasks} from '../../store/actions'
 
 
     componentDidUpdate(prevState) {
-        if(!prevState.addTaskSuccess && this.props.addTaskSuccess) {
+        if(!prevState.addTaskSuccsess && this.props.addTaskSuccsess) {
             this.setState({
-                openNewTaskModal: false
+                openNewTaskModal: false,   
+            })
+        }
+
+        if(!prevState.removeTasksSuccsess && this.props.removeTasksSuccsess) {
+            this.setState({
+                showConfirm: false, 
+                checkedTasks: new Set()  
+            })
+        }
+
+        if(!prevState.editTaskSuccsess && this.props.editTaskSuccsess) {
+            this.setState({
+                editTask: null  
             })
         }
     }
@@ -73,23 +86,23 @@ import {getTasks} from '../../store/actions'
 
 
 
-    deleted = id => {
-        return () => {
-            fetch(`http://localhost:3001/task/${id}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) throw data.error;
-                    let newArr = this.state.tasks.filter((item) => id !== item._id);
-                    this.setState({
-                        tasks: newArr,
-                    });
-                })
-                .catch(err => console.log(err.message));
-        }
-    }
+    // deleted = id => {
+    //     return () => {
+    //         fetch(`http://localhost:3001/task/${id}`, {
+    //             method: "DELETE",
+    //             headers: { "Content-Type": "application/json" }
+    //         })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 if (data.error) throw data.error;
+    //                 let newArr = this.state.tasks.filter((item) => id !== item._id);
+    //                 this.setState({
+    //                     tasks: newArr,
+    //                 });
+    //             })
+    //             .catch(err => console.log(err.message));
+    //     }
+    // }
 
     handleCheck = (taskId) => () => {
         const checkedTasks = new Set(this.state.checkedTasks);
@@ -106,32 +119,36 @@ import {getTasks} from '../../store/actions'
     }
 
     removeSelected = () => {
-        const checkedTasks = new Set(this.state.checkedTasks);
-        console.log();
-        fetch(`http://localhost:3001/task/`, {
-            method: "PATCH",      // Patch - update server 
-            body: JSON.stringify({
-                tasks: [...checkedTasks]
-            }),
-            headers: { "Content-Type": "application/json" }
+        const checkedTasks = [...this.state.checkedTasks];
+
+        this.props.removeTasks({
+            tasks: checkedTasks
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.error) throw data.error;
-                let tasks = [...this.state.tasks]
 
-                for (const checkTaskId of checkedTasks) {
-                    tasks = tasks.filter(task => task._id !== checkTaskId)
-                };
+        // fetch(`http://localhost:3001/task/`, {
+        //     method: "PATCH",      // Patch - update server 
+        //     body: JSON.stringify({
+        //         tasks: [...checkedTasks]
+        //     }),
+        //     headers: { "Content-Type": "application/json" }
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         if (data.error) throw data.error;
+        //         let tasks = [...this.state.tasks]
 
-                checkedTasks.clear();
-                this.setState({
-                    tasks,
-                    checkedTasks,
-                    showConfirm: false
-                });
-            })
-            .catch(err => console.log(err.message));
+        //         for (const checkTaskId of checkedTasks) {
+        //             tasks = tasks.filter(task => task._id !== checkTaskId)
+        //         };
+
+        //         checkedTasks.clear();
+        //         this.setState({
+        //             tasks,
+        //             checkedTasks,
+        //             showConfirm: false
+        //         });
+        //     })
+        //     .catch(err => console.log(err.message));
     }
 
     toggleConfirm = () => {
@@ -140,29 +157,29 @@ import {getTasks} from '../../store/actions'
         });
     };
 
-    handleSave = (taskId, data) => {
+    // handleSave = (taskId, data) => {
 
-        fetch(`http://localhost:3001/task/${taskId}`, {
-            method: "PUT",
-            body: JSON.stringify(data),
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(response => response.json())
-            .then(editedTask => {
-                if (editedTask.error) throw editedTask.error;
+    //     fetch(`http://localhost:3001/task/${taskId}`, {
+    //         method: "PUT",
+    //         body: JSON.stringify(data),
+    //         headers: { "Content-Type": "application/json" }
+    //     })
+    //         .then(response => response.json())
+    //         .then(editedTask => {
+    //             if (editedTask.error) throw editedTask.error;
 
-                const tasks = [...this.state.tasks];
-                const foundIndex = tasks.findIndex(el => el._id === editedTask._id);
-                tasks[foundIndex] = editedTask;
+    //             const tasks = [...this.state.tasks];
+    //             const foundIndex = tasks.findIndex(el => el._id === editedTask._id);
+    //             tasks[foundIndex] = editedTask;
 
-                this.setState({
-                    tasks,
-                    editTask: null
-                })
-            })
-            .catch(err => console.log(err.message));
+    //             this.setState({
+    //                 tasks,
+    //                 editTask: null
+    //             })
+    //         })
+    //         .catch(err => console.log(err.message));
 
-    };
+    // };
 
     handleEdit = (task) => () => {
         this.setState({ editTask: task });
@@ -183,7 +200,6 @@ import {getTasks} from '../../store/actions'
                 <Col key={item._id}>
                     <Task
                         data={item}
-                        removeTask={this.deleted}
                         onCheck={this.handleCheck(item._id)}
                         onEdit={this.handleEdit(item)}
                         disabled={size ? true : false}
@@ -233,7 +249,7 @@ import {getTasks} from '../../store/actions'
                 {!!this.state.editTask &&
                     <EditTaskModal
                         data={this.state.editTask}
-                        value={this.state.editTask}
+                        from='tasks'
                         onSave={this.handleSave}
                         onCancel={this.handleEdit(null)}
                     />
@@ -252,7 +268,9 @@ import {getTasks} from '../../store/actions'
 const mapStateToProps = (state) => {
     return {
         tasks: state.tasks,
-        addTaskSuccess: state.addTaskSuccess
+        addTaskSuccsess: state.addTaskSuccsess,
+        removeTasksSuccsess: state.removeTasksSuccsess,
+        editTaskSuccsess: state.editTaskSuccsess
     }
 }
 
@@ -263,7 +281,9 @@ const mapStateToProps = (state) => {
 // }
 
 const mapDispatchToProps = {
-    getTasks: getTasks
+    getTasks,
+    removeTasks,
+    editTask
 }
 
 

@@ -7,8 +7,11 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styles from "./Task.module.css";
 import { Link } from 'react-router-dom';
 
+import {connect} from 'react-redux';
+import {removeTask} from '../../store/actions'
 
-export default class Task extends React.PureComponent {
+
+ class Task extends React.PureComponent {
 
     state = {
         checked: false
@@ -42,11 +45,15 @@ export default class Task extends React.PureComponent {
                     <Card.Header className={styles.card_header}>Title: {this.props.data.title}</Card.Header>
                 </Link>
                 <Card.Body>
-                    <Card.Text>
+                    <Card.Text className={styles.desc}>
                         Description:  {this.props.data.description}
                     </Card.Text>
                     <Card.Text>
-                        Date:  {this.props.data.date ? this.props.data.date.slice(0, 10) : "none"}
+                        Date: { this.props.data.date.slice(0, 10) }
+                    </Card.Text>
+
+                    <Card.Text>
+                        Created: { this.props.data.created_at.slice(0, 10)}
                     </Card.Text>
 
                     <Button className='m-1'
@@ -58,7 +65,7 @@ export default class Task extends React.PureComponent {
 
                     <Button
                         variant="danger"
-                        onClick={this.props.removeTask(this.props.data._id)}
+                        onClick={() => this.props.removeTask(this.props.data._id)}
                         disabled={this.props.disabled}>
                         <FontAwesomeIcon icon={faTrash} />
                     </Button>
@@ -70,8 +77,13 @@ export default class Task extends React.PureComponent {
 
 Task.propTypes = {
     data: PropTypes.object.isRequired,
-    removeTask: PropTypes.func,
     onCheck: PropTypes.func,
     onEdit: PropTypes.func
 }
+
+const mapDispatchToProps = {
+        removeTask
+}
+
+export default connect(null, mapDispatchToProps)(Task)
 

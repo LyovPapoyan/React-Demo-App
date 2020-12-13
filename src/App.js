@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import Menu from './components/Menu/Menu'
 import Header from './components/Header/Header';
 import ToDo from './pages/Todo/ToDo';
@@ -10,6 +9,7 @@ import Contact from './pages/contacts/Contact';
 import NotFound from './pages/not-found/Not-found';
 import SingleTask from './pages/singleTask/SingleTask';
 import Spinner from './components/Spinner/Spinner'
+// import  './components/Spinner/Spinner.module.css'
 
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -39,6 +39,7 @@ class App extends React.PureComponent {
       <>
         <Menu />
         <Header />
+        {this.props.loading && <Spinner/>} 
         <Switch>
           <Route path="/" component={ToDo} exact />
           <Route path="/task/:id" component={SingleTask} exact />
@@ -47,7 +48,6 @@ class App extends React.PureComponent {
           <Route path="/not-found" component={NotFound} exact />
           <Redirect to="/not-found" component={NotFound} />
         </Switch>
-  
         <ToastContainer
           position="top-center"
           autoClose={3000}
@@ -59,7 +59,7 @@ class App extends React.PureComponent {
           draggable
           pauseOnHover
         />
-        {this.props.loading && <Spinner />}
+      
       </>
     );
 
