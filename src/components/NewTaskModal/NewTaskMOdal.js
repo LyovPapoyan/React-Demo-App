@@ -3,7 +3,9 @@ import { FormControl, Button, Modal, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import styles from './Input.module.css'
+import styles from './Input.module.css';
+import { connect } from 'react-redux';
+import { addTask } from '../../store/actions'
 
 
 class NewTaskModal extends PureComponent {
@@ -22,7 +24,7 @@ class NewTaskModal extends PureComponent {
 
     handleChange = (type, value) => {
 
-        if(type === 'title' && !this.state.valid) {
+        if (type === 'title' && !this.state.valid) {
             this.setState({
                 [type]: value,
                 valid: true
@@ -49,7 +51,7 @@ class NewTaskModal extends PureComponent {
         if (!title) {
             this.setState({
                 valid: false,
-                 validationType: 'requiredError'
+                validationType: 'requiredError'
             })
             return;
         };
@@ -68,14 +70,14 @@ class NewTaskModal extends PureComponent {
             description,
             date: date.toISOString().slice(0, 10)
         }
-        this.props.onAdd(data);
+        this.props.addTask(data);
     }
 
     render() {
 
         let errorMsg = '';
 
-        if(!this.state.valid) {
+        if (!this.state.valid) {
             errorMsg = this.validationErrors[this.state.validationType];
         }
 
@@ -124,8 +126,12 @@ class NewTaskModal extends PureComponent {
 
 
 NewTaskModal.propTypes = {
-    onAdd: PropTypes.func.isRequired,
+    addTask: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired
 };
 
-export default NewTaskModal;
+const mapDispatchToProps = {
+    addTask
+}
+
+export default connect(null, mapDispatchToProps)(NewTaskModal);

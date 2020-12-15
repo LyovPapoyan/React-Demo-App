@@ -19,3 +19,11 @@
 .checked {
     border: 1px solid red;
 }
+
+.desc {
+    width: 290px;
+    height: 30px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

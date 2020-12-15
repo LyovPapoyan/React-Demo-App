@@ -8,11 +8,12 @@ import Task from '../../components/Task/Task';
 import Confirm from '../../components/Confirm';
 import EditTaskModal from '../../components/EditTaskModal';
 
+import {getTasks, removeTasks, editTask} from '../../store/actions'
+
  class Todo extends React.PureComponent {
 
 
     state = {
-        tasks: [],
         checkedTasks: new Set(),
         showConfirm: false,
         editTask: null,
@@ -20,62 +21,88 @@ import EditTaskModal from '../../components/EditTaskModal';
     };
 
     componentDidMount() {
-        fetch("http://localhost:3001/task", {
-            method: "GET",
-            headers: {
-                "Content-type": "application/json"
-            }
-        })
-            .then(response => response.json())
-            .then(tasks => {
-                if (tasks.error) throw tasks.error;
-                this.setState({
-                    tasks: tasks
-                })
-            })
-            .catch(err => console.log(err))
+
+        this.props.getTasks();
+        
+        // fetch("http://localhost:3001/task", {
+        //     method: "GET",
+        //     headers: {
+        //         "Content-type": "application/json"
+        //     }
+        // })
+        //     .then(response => response.json())
+        //     .then(tasks => {
+        //         if (tasks.error) throw tasks.error;
+        //         this.setState({
+        //             tasks: tasks
+        //         })
+        //     })
+        //     .catch(err => console.log(err))
     }
 
 
-    addTask = (newTask) => {
-
-        let tasks = [...this.state.tasks];
-
-
-        fetch("http://localhost:3001/task", {
-            method: "POST",
-            body: JSON.stringify(newTask),
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(response => response.json())
-            .then(task => {
-                if (task.error) throw task.error;
-
-                this.setState({
-                    tasks: [task, ...tasks],
-                    openNewTaskModal: false
-                })
+    componentDidUpdate(prevState) {
+        if(!prevState.addTaskSuccsess && this.props.addTaskSuccsess) {
+            this.setState({
+                openNewTaskModal: false,   
             })
-            .catch(err => console.log(err.message));
-    }
+        }
 
-    deleted = id => {
-        return () => {
-            fetch(`http://localhost:3001/task/${id}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" }
+        if(!prevState.removeTasksSuccsess && this.props.removeTasksSuccsess) {
+            this.setState({
+                showConfirm: false, 
+                checkedTasks: new Set()  
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) throw data.error;
-                    let newArr = this.state.tasks.filter((item) => id !== item._id);
-                    this.setState({
-                        tasks: newArr,
-                    });
-                })
-                .catch(err => console.log(err.message));
+        }
+
+        if(!prevState.editTaskSuccsess && this.props.editTaskSuccsess) {
+            this.setState({
+                editTask: null  
+            })
         }
     }
+
+
+    // addTask = (newTask) => {
+
+    //     let tasks = [...this.state.tasks];
+
+    //     fetch("http://localhost:3001/task", {
+    //         method: "POST",
+    //         body: JSON.stringify(newTask),
+    //         headers: { "Content-Type": "application/json" }
+    //     })
+    //         .then(response => response.json())
+    //         .then(task => {
+    //             if (task.error) throw task.error;
+
+    //             this.setState({
+    //                 tasks: [task, ...tasks],
+    //                 openNewTaskModal: false
+    //             })
+    //         })
+    //         .catch(err => console.log(err.message));
+    // }
+
+
+
+    // deleted = id => {
+    //     return () => {
+    //         fetch(`http://localhost:3001/task/${id}`, {
+    //             method: "DELETE",
+    //             headers: { "Content-Type": "application/json" }
+    //         })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 if (data.error) throw data.error;
+    //                 let newArr = this.state.tasks.filter((item) => id !== item._id);
+    //                 this.setState({
+    //                     tasks: newArr,
+    //                 });
+    //             })
+    //             .catch(err => console.log(err.message));
+    //     }
+    // }
 
     handleCheck = (taskId) => () => {
         const checkedTasks = new Set(this.state.checkedTasks);
@@ -92,32 +119,36 @@ import EditTaskModal from '../../components/EditTaskModal';
     }
 
     removeSelected = () => {
-        const checkedTasks = new Set(this.state.checkedTasks);
-        console.log();
-        fetch(`http://localhost:3001/task/`, {
-            method: "PATCH",      // Patch - update server 
-            body: JSON.stringify({
-                tasks: [...checkedTasks]
-            }),
-            headers: { "Content-Type": "application/json" }
+        const checkedTasks = [...this.state.checkedTasks];
+
+        this.props.removeTasks({
+            tasks: checkedTasks
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.error) throw data.error;
-                let tasks = [...this.state.tasks]
 
-                for (const checkTaskId of checkedTasks) {
-                    tasks = tasks.filter(task => task._id !== checkTaskId)
-                };
+        // fetch(`http://localhost:3001/task/`, {
+        //     method: "PATCH",      // Patch - update server 
+        //     body: JSON.stringify({
+        //         tasks: [...checkedTasks]
+        //     }),
+        //     headers: { "Content-Type": "application/json" }
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         if (data.error) throw data.error;
+        //         let tasks = [...this.state.tasks]
 
-                checkedTasks.clear();
-                this.setState({
-                    tasks,
-                    checkedTasks,
-                    showConfirm: false
-                });
-            })
-            .catch(err => console.log(err.message));
+        //         for (const checkTaskId of checkedTasks) {
+        //             tasks = tasks.filter(task => task._id !== checkTaskId)
+        //         };
+
+        //         checkedTasks.clear();
+        //         this.setState({
+        //             tasks,
+        //             checkedTasks,
+        //             showConfirm: false
+        //         });
+        //     })
+        //     .catch(err => console.log(err.message));
     }
 
     toggleConfirm = () => {
@@ -126,29 +157,29 @@ import EditTaskModal from '../../components/EditTaskModal';
         });
     };
 
-    handleSave = (taskId, data) => {
+    // handleSave = (taskId, data) => {
 
-        fetch(`http://localhost:3001/task/${taskId}`, {
-            method: "PUT",
-            body: JSON.stringify(data),
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(response => response.json())
-            .then(editedTask => {
-                if (editedTask.error) throw editedTask.error;
+    //     fetch(`http://localhost:3001/task/${taskId}`, {
+    //         method: "PUT",
+    //         body: JSON.stringify(data),
+    //         headers: { "Content-Type": "application/json" }
+    //     })
+    //         .then(response => response.json())
+    //         .then(editedTask => {
+    //             if (editedTask.error) throw editedTask.error;
 
-                const tasks = [...this.state.tasks];
-                const foundIndex = tasks.findIndex(el => el._id === editedTask._id);
-                tasks[foundIndex] = editedTask;
+    //             const tasks = [...this.state.tasks];
+    //             const foundIndex = tasks.findIndex(el => el._id === editedTask._id);
+    //             tasks[foundIndex] = editedTask;
 
-                this.setState({
-                    tasks,
-                    editTask: null
-                })
-            })
-            .catch(err => console.log(err.message));
+    //             this.setState({
+    //                 tasks,
+    //                 editTask: null
+    //             })
+    //         })
+    //         .catch(err => console.log(err.message));
 
-    };
+    // };
 
     handleEdit = (task) => () => {
         this.setState({ editTask: task });
@@ -164,12 +195,11 @@ import EditTaskModal from '../../components/EditTaskModal';
 
     render() {
         let size = this.state.checkedTasks.size;
-        let taskCards = this.state.tasks
+        let taskCards = this.props.tasks
             .map((item) =>
                 <Col key={item._id}>
                     <Task
                         data={item}
-                        removeTask={this.deleted}
                         onCheck={this.handleCheck(item._id)}
                         onEdit={this.handleEdit(item)}
                         disabled={size ? true : false}
@@ -193,11 +223,11 @@ import EditTaskModal from '../../components/EditTaskModal';
 
                 <Row>
                     {
-                        taskCards
+                      taskCards
                     }
                 </Row>
 
-                { this.state.tasks.length !== 0 &&
+                { this.props.tasks.length !== 0 &&
                     <Row className="justify-content-center">
                         <Button variant="danger"
                             disabled={size ? false : true}
@@ -219,7 +249,7 @@ import EditTaskModal from '../../components/EditTaskModal';
                 {!!this.state.editTask &&
                     <EditTaskModal
                         data={this.state.editTask}
-                        value={this.state.editTask}
+                        from='tasks'
                         onSave={this.handleSave}
                         onCancel={this.handleEdit(null)}
                     />
@@ -227,14 +257,9 @@ import EditTaskModal from '../../components/EditTaskModal';
 
                 { this.state.openNewTaskModal &&
                     <NewTaskModal
-                        onAdd={this.addTask}
                         onCancel={this.toggleNewTaskModal}
                     />
                 }
-                <div>
-                    <p>{this.props.number}</p>
-                    <button onClick={() => this.props.changeValue(20)}> Change</button>
-                </div>
             </Container>
         )
     }
@@ -242,15 +267,24 @@ import EditTaskModal from '../../components/EditTaskModal';
 
 const mapStateToProps = (state) => {
     return {
-        number: state.count
+        tasks: state.tasks,
+        addTaskSuccsess: state.addTaskSuccsess,
+        removeTasksSuccsess: state.removeTasksSuccsess,
+        editTaskSuccsess: state.editTaskSuccsess
     }
 }
 
-const mapStateToDispatch = (dispatch) => {
-    return {
-        changeValue: (value) => {dispatch({type: "CHANGE_COUNT", value})}
-    }
+// const mapStateToDispatch = (dispatch) => {
+//     return {
+//         changeValue: (value) => {dispatch({type: "CHANGE_COUNT", value})}
+//     }
+// }
+
+const mapDispatchToProps = {
+    getTasks,
+    removeTasks,
+    editTask
 }
 
 
-export default connect(mapStateToProps, mapStateToDispatch)(Todo)
+export default connect(mapStateToProps, mapDispatchToProps)(Todo)
