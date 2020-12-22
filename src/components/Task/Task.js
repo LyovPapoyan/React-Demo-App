@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import { Button, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faCheck, faHistory } from '@fortawesome/free-solid-svg-icons';
 import styles from "./Task.module.css";
 import { Link } from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {removeTask} from '../../store/actions'
+import {removeTask, changeTaskStatus} from '../../store/actions'
 
 
  class Task extends React.PureComponent {
@@ -33,10 +33,12 @@ import {removeTask} from '../../store/actions'
 
     render() {
 
-        let { checked } = this.state
+        let { checked } = this.state;
+        let {status} = this.props.data;
+        console.log(status);
 
         return (
-            <Card className={`${styles.card} ${checked ? styles.checked : null}`}>
+            <Card className={`${styles.card} ${checked ? styles.checked : null}  ${status === 'done' ? styles.done : styles.active}`}>
                 <input type="checkbox"
                     className={styles.checkbox}
                     onClick={this.toggleCheckbox}
@@ -56,18 +58,36 @@ import {removeTask} from '../../store/actions'
                         Created: { this.props.data.created_at.slice(0, 10)}
                     </Card.Text>
 
+                    <Card.Text>
+                        Status: {status}
+                    </Card.Text>
+            { status === 'done' ? 
+                    <Button className='m-1'
+                        variant="warning"
+                        onClick={() => this.props.changeTaskStatus(this.props.data._id, {status:'active'})}
+                        disabled={this.props.disabled}>
+                        <FontAwesomeIcon icon={faHistory} title="Active"/>
+                    </Button>
+                :
+                    <Button className='m-1'
+                        variant="success"
+                        onClick={() => this.props.changeTaskStatus(this.props.data._id, {status:'done'})}
+                        disabled={this.props.disabled}>
+                        <FontAwesomeIcon icon={faCheck} title="Completed"/>
+                    </Button>
+            }
                     <Button className='m-1'
                         variant="info"
                         onClick={this.props.onEdit}
                         disabled={this.props.disabled}>
-                        <FontAwesomeIcon icon={faEdit} />
+                        <FontAwesomeIcon icon={faEdit} title="Edit"/>
                     </Button>
 
                     <Button
                         variant="danger"
                         onClick={() => this.props.removeTask(this.props.data._id)}
                         disabled={this.props.disabled}>
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faTrash} title="Delete"/>
                     </Button>
                 </Card.Body>
             </Card>
@@ -82,7 +102,8 @@ Task.propTypes = {
 }
 
 const mapDispatchToProps = {
-        removeTask
+        removeTask, 
+        changeTaskStatus
 }
 
 export default connect(null, mapDispatchToProps)(Task)

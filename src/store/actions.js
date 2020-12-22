@@ -21,13 +21,25 @@ export function getTask(taskId) {
 }
 
 
-export function getTasks() {
+export function getTasks(params= {}) {
+ 
+    let url = `${apiUrl}/task`;
+
+    let query = '?';
+
+    for (let key in params) {
+        query += `${key}=${params[key]}&`
+    }
+
+    if(query !== '?') {
+        url += query;
+    }
 
     return (dispatch) => {
 
         dispatch({type: "LOADING"})
 
-        request(`${apiUrl}/task`)
+        request(url)
         .then(tasks => {
             dispatch({type: "GET_TASKS_SUCCES", tasks})
         })
@@ -66,6 +78,24 @@ export function editTask(taskId, data, from) {
         request(`${apiUrl}/task/${taskId}`, 'PUT', data)
         .then(editedTask => {
             dispatch({type: "EDIT_TASK_SUCCES", editedTask, from})
+        })
+        .catch(err => {
+            dispatch({type: "TASK_FAILED", error: err.message})
+        })
+    }
+   
+}
+
+
+export function changeTaskStatus(taskId, data, from='tasks') {
+    console.log(taskId);
+    return (dispatch) => {
+
+        dispatch({type: "LOADING"})
+
+        request(`${apiUrl}/task/${taskId}`, 'PUT', data)
+        .then(editedTask => {
+            dispatch({type: "CHANGE_TASK_STATUS_SUCCES", editedTask, from, status: data.status})
         })
         .catch(err => {
             dispatch({type: "TASK_FAILED", error: err.message})

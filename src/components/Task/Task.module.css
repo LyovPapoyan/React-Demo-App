@@ -16,9 +16,19 @@
     font-size: 20px;
 }
 
+.active {
+    border: 1px solid blue;
+}
+
+.done {
+    border: 1px solid green;
+}
+
 .checked {
     border: 1px solid red;
 }
+
+
 
 .desc {
     width: 290px;

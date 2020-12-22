@@ -1,0 +1,10 @@
+.date_block {
+   display: flex;
+   flex-direction: row;
+  
+}
+
+.react-datepicker-wrapper {
+    border-radius: 50%;
+    border: 3px solid red;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from './components/Menu/Menu'
-import Header from './components/Header/Header';
+import Search from './components/Search/Search'
 import ToDo from './pages/Todo/ToDo';
 import About from './pages/about/About';
 import Contact from './pages/contacts/Contact';
@@ -38,7 +38,7 @@ class App extends React.PureComponent {
     return (
       <>
         <Menu />
-        <Header />
+        <Search/>
         {this.props.loading && <Spinner/>} 
         <Switch>
           <Route path="/" component={ToDo} exact />

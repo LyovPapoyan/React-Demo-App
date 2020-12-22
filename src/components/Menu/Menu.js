@@ -1,10 +1,14 @@
 import React from 'react';
-import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
-import styles from './Menu.module.css'
+import styles from './Menu.module.css';
+
+
+
 
 
 function Menu() {
+
     return (
         <>
             <Navbar bg="dark" variant="dark">
@@ -28,13 +32,12 @@ function Menu() {
                         Contacts
                     </NavLink>
                 </Nav>
-                <Form inline className="ml-auto">
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-info">Search</Button>
-                </Form>
+
+               
             </Navbar>
         </>
     );
 }
+
 
 export default Menu;
