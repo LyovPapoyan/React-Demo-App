@@ -195,7 +195,6 @@ import {getTasks, removeTasks, editTask} from '../../store/actions'
 
     render() {
         let size = this.state.checkedTasks.size;
-        console.log(this.props.tasks);
         let taskCards = this.props.tasks
             .map((item) =>
                 <Col key={item._id}>
