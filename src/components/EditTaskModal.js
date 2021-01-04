@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import { FormControl, Button, Modal, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
@@ -8,21 +8,26 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styles from './NewTaskModal/Input.module.css'
 
 
+
 class EditTaskModal extends PureComponent {
   constructor(props) {
     super(props);
-    this.state =
-    {
+    this.state = {
       ...props.data,
       date: new Date(props.data.date),
       valid: true
     }
-  }
 
+    this.titleRef = createRef();
+  }
 
   validationErrors = {
     requiredError: 'The field is required!',
     lengthError: 'The title length should be less than 30 characters'
+  }
+
+  componentDidMount(){
+    this.titleRef.current.focus();
   }
 
   handleChange = (type, value) => {
@@ -107,6 +112,7 @@ class EditTaskModal extends PureComponent {
             placeholder="Title"
             aria-label="Title"
             aria-describedby="basic-addon2"
+            ref={this.titleRef}
           />
           <p className={styles.errorMsg}>{errorMsg}</p>
           <Form.Control as="textarea" className="my-3" rows={3}
