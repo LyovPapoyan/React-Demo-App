@@ -35,7 +35,6 @@ import {removeTask, changeTaskStatus} from '../../store/actions'
 
         let { checked } = this.state;
         let {status} = this.props.data;
-        console.log(status);
 
         return (
             <Card className={`${styles.card} ${checked ? styles.checked : null}  ${status === 'done' ? styles.done : styles.active}`}>
