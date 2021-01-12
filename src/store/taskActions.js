@@ -10,7 +10,6 @@ export function getTask(taskId) {
 
         request(`${apiUrl}/task/${taskId}`)
         .then(task => {
-            console.log(task)
             dispatch({type: "GET_TASK_SUCCES", task})
         })
         .catch(err => {
@@ -88,7 +87,6 @@ export function editTask(taskId, data, from) {
 
 
 export function changeTaskStatus(taskId, data, from='tasks') {
-    console.log(taskId);
     return (dispatch) => {
 
         dispatch({type: "LOADING"})

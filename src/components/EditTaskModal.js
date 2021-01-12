@@ -2,7 +2,7 @@ import React, { PureComponent, createRef } from 'react';
 import { FormControl, Button, Modal, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
-import {editTask} from '../store/actions'
+import {editTask} from '../store/taskActions'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './NewTaskModal/Input.module.css'

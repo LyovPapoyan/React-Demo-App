@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import {connect} from 'react-redux';
-import {getTask, removeTask} from '../../store/actions';
+import {getTask, removeTask} from '../../store/taskActions';
 
 class SingleTask extends React.PureComponent {
 
@@ -142,9 +142,9 @@ class SingleTask extends React.PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        task: state.task,
-        removeTaskSuccsess: state.removeTaskSuccsess,
-        editTaskSuccsess: state.editTaskSuccsess
+        task: state.taskReducer.task,
+        removeTaskSuccsess: state.taskReducer.removeTaskSuccsess,
+        editTaskSuccsess: state.taskReducer.editTaskSuccsess
     }
 }
 
