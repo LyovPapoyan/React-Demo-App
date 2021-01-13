@@ -1,8 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import styles from '../registration/Registration.module.css';
+import {connect} from 'react-redux';
+import {login} from '../../store/userActions';
 
-function Login() {
+function Login(props) {
+
+    const [values, setValues] = useState({
+        email: '',
+        password: ''
+    });
+
+    const [errors, setErrors] = useState({
+        email: null,
+        password: null,
+        confirmPassword: null
+    });
+
+    const handleSubmit = () => {
+        const {email, password } = values;
+
+        setErrors({
+            email: email ? null : 'Email is required',
+            password: password ? null : 'Password is required',
+        });
+
+        if(email && password) {
+           console.log(values);
+           props.login(values)
+        }
+    };
+
+    const handleChange = ({ target: { name, value } }) => {
+        setValues({
+            ...values,
+            [name]: value
+        });
+
+        setErrors({
+            ...errors,
+            [name]: null
+        });
+
+    };
+
+
     return (
         <div className={styles.main}>
             <Container>
@@ -14,16 +56,16 @@ function Login() {
 
                             <Form.Group>
                                 <Form.Control
-                                    // className={errors.email ? styles.invalid : ''}
-                                    // type="email"
-                                    // name="email"
-                                    placeholder="Enter email"
-                                // value={values.email}
-                                // onChange={handleChange}
+                                    className={errors.email ? styles.invalid : ''}
+                                    type="email"
+                                    name="email"
+                                   placeholder="Enter email"
+                                value={values.email}
+                                onChange={handleChange}
                                 />
                                 {
                                     <Form.Text className="text-danger" >
-                                        {/* {errors.email} */}
+                                        {errors.email}
                                     </Form.Text>
                                 }
 
@@ -31,23 +73,23 @@ function Login() {
 
                             <Form.Group>
                                 <Form.Control
-                                    // className={errors.password ? styles.invalid : ''}
-                                    // type="password"
-                                    placeholder="Password"
-                                // value={values.password}
-                                // onChange={handleChange}
-                                // name="password"
+                                    className={errors.password ? styles.invalid : ''}
+                                    type="password"
+                                   placeholder="Password"
+                                value={values.password}
+                                onChange={handleChange}
+                                name="password"
                                 />
                                 {
                                     <Form.Text className="text-danger">
-                                        {/* {errors.password} */}
+                                        {errors.password}
                                     </Form.Text>
                                 }
                             </Form.Group>
                             <div className={styles.submitContainer}>
                                 <Button
                                     variant="primary"
-                                    // onClick={handleSubmit}
+                                    onClick={handleSubmit}
                                 >
                                     Login
                             </Button>
@@ -63,4 +105,8 @@ function Login() {
     )
 }
 
-export default Login;
+const mapDispatchToProps = {
+    login
+}
+
+export default connect(null, mapDispatchToProps)(Login)

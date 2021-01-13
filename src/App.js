@@ -24,8 +24,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 class App extends React.PureComponent {
 
   componentDidUpdate() {
-    const {errorMessage, successMessage, authSuccessMessage} = this.props;
-
+    const {errorMessage, successMessage, authSuccessMessage, authErrorMessage} = this.props;
     if(errorMessage) {
       toast.error(errorMessage);
     }
@@ -36,6 +35,10 @@ class App extends React.PureComponent {
 
     if(authSuccessMessage) {
       toast.success(authSuccessMessage);
+    }
+
+    if(authErrorMessage) {
+      toast.error(authErrorMessage);
     }
   }
 
@@ -82,7 +85,7 @@ const mapStateToProps = (state) => {
     successMessage: state.taskReducer.successMessage,
     taskLoading: state.taskReducer.loading,
     authLoading: state.authReducer.authLoading,
-    // authErrorMessage: state.authReducer.authLoading
+    authErrorMessage: state.authReducer.authError,
     authSuccessMessage: state.authReducer.authSuccessMessage
   }
 }

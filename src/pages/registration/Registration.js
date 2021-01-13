@@ -23,7 +23,9 @@ function Registration(props) {
     const [errors, setErrors] = useState({
         email: null,
         password: null,
-        confirmPassword: null
+        confirmPassword: null,
+        name: '',
+        surname: ''
     });
 
     const handleSubmit = () => {
@@ -31,6 +33,18 @@ function Registration(props) {
         let valid = true;
         let passwordMessage = null;
 
+        if(!name){
+           
+            valid = false
+        }
+        if(!surname){
+           
+            valid = false
+        }
+        if(!email){
+           
+            valid = false
+        }
         if(!confirmPassword){
             passwordMessage = 'Password is required';
             valid = false

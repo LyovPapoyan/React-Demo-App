@@ -1,9 +1,10 @@
 const defaultState = { 
   authLoading: false,
-  error: null,
+  authError: null,
   userId: null,
   authSuccessMessage: null,
-  registerSuccses: false
+  registerSuccses: false,
+  isAuth: false
 }
 
 export const authReducer = (state = defaultState, action) => {
@@ -14,15 +15,15 @@ export const authReducer = (state = defaultState, action) => {
         ...state,
         authLoading: true,
         successMessage: null,
-        error: null
+        authError: null
       }
     }
 
-    case "TASK_FAILED": {
+    case "AUTH_FAILED": {
       return {
         ...state,
         authLoading: false,
-        error: action.error
+        authError: action.error
       }
     }
 
@@ -32,6 +33,14 @@ export const authReducer = (state = defaultState, action) => {
       authLoading: false,
       registerSuccses: true,
       authSuccessMessage: 'You have succsesfully registration' 
+    }
+  }
+
+    case "LOGIN_SUCCES": {
+      return {
+      ...state,
+      authLoading: false, 
+      isAuth: true
     }
   }
 
