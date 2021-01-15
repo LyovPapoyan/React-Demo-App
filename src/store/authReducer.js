@@ -1,10 +1,20 @@
+function checkLoginStatus() {
+  const token = localStorage.getItem('token');
+  if(!token) {
+    return false;
+  } else {
+    // stugel jamket@
+    return true;
+  }
+}
+
 const defaultState = { 
   authLoading: false,
   authError: null,
   userId: null,
   authSuccessMessage: null,
   registerSuccses: false,
-  isAuth: false
+  isAuth: checkLoginStatus()
 }
 
 export const authReducer = (state = defaultState, action) => {
@@ -14,7 +24,7 @@ export const authReducer = (state = defaultState, action) => {
       return {
         ...state,
         authLoading: true,
-        successMessage: null,
+        authSuccessMessage: null,
         authError: null
       }
     }
@@ -41,6 +51,14 @@ export const authReducer = (state = defaultState, action) => {
       ...state,
       authLoading: false, 
       isAuth: true
+    }
+  }
+
+    case "LOGOUT_SUCCES": {
+      return {
+      ...state,
+      authLoading: false, 
+      isAuth: false
     }
   }
 

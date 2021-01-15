@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import styles from '../registration/Registration.module.css';
 import {connect} from 'react-redux';
 import {login} from '../../store/userActions';
 
 function Login(props) {
+
+    useEffect(() => {
+        if(props.isAuth){
+            props.history.push('/');
+        }
+    }, [props.isAuth, props.history])
 
     const [values, setValues] = useState({
         email: '',
@@ -105,8 +111,14 @@ function Login(props) {
     )
 }
 
+const mapStateToProps = (state) => {
+    return {
+        isAuth: state.authReducer.isAuth
+    }
+}
+
 const mapDispatchToProps = {
     login
 }
 
-export default connect(null, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

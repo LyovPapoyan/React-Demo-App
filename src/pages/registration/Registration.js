@@ -10,7 +10,7 @@ function Registration(props) {
         if(props.registerSuccses) {
             props.history.push('/login');
         }
-    }, [props.registerSuccses])
+    }, [props.registerSuccses, props.history])
 
     const [values, setValues] = useState({
         email: '',
@@ -96,7 +96,7 @@ function Registration(props) {
 
                             <Form.Group>
                                 <Form.Control
-                                    className={errors.email? styles.invalid: ''}
+                                    className={errors.name? styles.invalid: ''}
                                     type="text"
                                     name="name"
                                     placeholder="Enter your Name"
@@ -113,7 +113,7 @@ function Registration(props) {
 
                             <Form.Group>
                                 <Form.Control
-                                    className={errors.email? styles.invalid: ''}
+                                    className={errors.surname? styles.invalid: ''}
                                     type="text"
                                     name="surname"
                                     placeholder="Enter your Surname"

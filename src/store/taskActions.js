@@ -91,9 +91,9 @@ export function changeTaskStatus(taskId, data, from='tasks') {
 
         dispatch({type: "LOADING"})
 
-        request(`${apiUrl}/task/${taskId}`, 'PUT', data)
+        request(`${apiUrl}/task/${taskId}`, 'PUT', data, from)
         .then(editedTask => {
-            dispatch({type: "CHANGE_TASK_STATUS_SUCCES", editedTask, from, status: data.status})
+            dispatch({type: "CHANGE_TASK_STATUS_SUCCES", editedTask, status: data.status, from})
         })
         .catch(err => {
             dispatch({type: "TASK_FAILED", error: err.message})

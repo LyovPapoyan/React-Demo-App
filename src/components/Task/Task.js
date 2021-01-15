@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 import {connect} from 'react-redux';
 import {removeTask, changeTaskStatus} from '../../store/taskActions'
-
+    
 
  class Task extends React.PureComponent {
 
