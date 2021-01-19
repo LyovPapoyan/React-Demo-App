@@ -4,10 +4,10 @@ import EditTaskModal from '../../components/EditTaskModal';
 
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faHistory, faCheck } from '@fortawesome/free-solid-svg-icons';
 
-import {connect} from 'react-redux';
-import {getTask, removeTask} from '../../store/actions';
+import { connect } from 'react-redux';
+import { getTask, removeTask, changeTaskStatus } from '../../store/taskActions';
 
 class SingleTask extends React.PureComponent {
 
@@ -19,33 +19,33 @@ class SingleTask extends React.PureComponent {
         const taskId = this.props.match.params.id;
         this.props.getTask(taskId);
 
-    //     fetch(`http://localhost:3001/task/${taskId}`, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-type": "application/json"
-    //         }
-    //     })
-    //         .then(response => response.json())
-    //         .then(task => {
-    //             if (task.error) throw task.error;
-    //             this.setState({
-    //                 task: task
-    //             })
+        //     fetch(`http://localhost:3001/task/${taskId}`, {
+        //         method: "GET",
+        //         headers: {
+        //             "Content-type": "application/json"
+        //         }
+        //     })
+        //         .then(response => response.json())
+        //         .then(task => {
+        //             if (task.error) throw task.error;
+        //             this.setState({
+        //                 task: task
+        //             })
 
-    //         })
-    //         .catch(err => console.log(err));
-     }
+        //         })
+        //         .catch(err => console.log(err));
+    }
 
-     
-     componentDidUpdate(prevProps) {
-         if(!prevProps.removeTaskSuccsess && this.props.removeTaskSuccsess) {
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.removeTaskSuccsess && this.props.removeTaskSuccsess) {
             this.props.history.push("/");
-         }
+        }
 
-         if(!prevProps.editTaskSuccsess && this.props.editTaskSuccsess) {
-             this.toggleEditModal();
-         }
-     }
+        if (!prevProps.editTaskSuccsess && this.props.editTaskSuccsess) {
+            this.toggleEditModal();
+        }
+    }
 
 
     toggleEditModal = () => {
@@ -58,27 +58,27 @@ class SingleTask extends React.PureComponent {
 
     //     this.props.editTask(taskId, task, 'single')
 
-        // fetch(`http://localhost:3001/task/${taskId}`, {
-        //     method: "PUT",
-        //     body: JSON.stringify(task),
-        //     headers: { "Content-Type": "application/json" }
-        // })
-        //     .then(response => response.json())
-        //     .then(editedTask => {
-        //         if (editedTask.error) throw editedTask.error;
-               
-        //         this.setState({
-        //             task: editedTask,
-        //             isEdit: false
-        //         })
-        //     })
-        //     .catch(err => console.log(err.message));
+    // fetch(`http://localhost:3001/task/${taskId}`, {
+    //     method: "PUT",
+    //     body: JSON.stringify(task),
+    //     headers: { "Content-Type": "application/json" }
+    // })
+    //     .then(response => response.json())
+    //     .then(editedTask => {
+    //         if (editedTask.error) throw editedTask.error;
+
+    //         this.setState({
+    //             task: editedTask,
+    //             isEdit: false
+    //         })
+    //     })
+    //     .catch(err => console.log(err.message));
 
     // }
 
     handleRemove = () => {
 
-        
+
         const id = this.props.task._id
 
         this.props.removeTask(id, 'single')
@@ -96,42 +96,65 @@ class SingleTask extends React.PureComponent {
     }
 
     render() {
-        const {isEdit } = this.state;
-        const {task} = this.props;
+        const { isEdit } = this.state;
+        let { task,  changeTaskStatus } = this.props;
+       
+       console.log("task " + task);
+       console.log(this.props);
+       
         return (
             <>
-                { task? 
-                        <div className={styles.container}>
-                            <h3>Title</h3>
-                            <p>{task.title}</p>
-                            <h3>Description</h3>
-                            <p className={styles.desc}>{task.description}</p>
-                            <h3>Time</h3>
-                            <p>{task.date.slice(0, 10)}</p>
-                            <h3>Created</h3>
-                            <p>{ task.created_at.slice(0, 10)}</p>
-                            <Button className='mr-4'
-                                variant="info"
-                                onClick={this.toggleEditModal}>
-                                <FontAwesomeIcon icon={faEdit} />
-                            </Button>
+                { task ?
+                    <div className={styles.container}>
+                        <h3>Title</h3>
+                        <p>{task.title}</p>
+                        <h3>Description</h3>
+                        <p className={styles.desc}>{task.description}</p>
+                        <h3>Time</h3>
+                        <p>{task.date.slice(0, 10)}</p>
+                        <h3>Created</h3>
+                        <p>{task.created_at.slice(0, 10)}</p>
+                        <h3>Status</h3>
+                        <p>{task.status}</p>
 
-                            <Button
-                                variant="danger"
-                                onClick={this.handleRemove}>
-                                <FontAwesomeIcon icon={faTrash} />
+                        {task.status === 'done' ?
+                            <Button className='m-1'
+                                variant="warning"
+                                onClick={() => changeTaskStatus(task._id, { status: 'active' })}
+                                disabled={this.props.disabled}>
+                                <FontAwesomeIcon icon={faHistory} title="Active" />
                             </Button>
+                            :
+                            <Button className='m-1'
+                                variant="success"
+                                onClick={() => changeTaskStatus(task._id, { status: 'done' }, 'single')}
+                                disabled={this.props.disabled}>
+                                <FontAwesomeIcon icon={faCheck} title="Completed" />
+                            </Button>
+                        }
 
-                            {
-                                isEdit &&
-                                <EditTaskModal
-                                    data={task}
-                                    onCancel={this.toggleEditModal}
-                                    from='single'
-                                />
-                            }
-                        </div>:
-                        <p>THERE IS NO TASKS!</p>
+                        <Button className='mr-4'
+                            variant="info"
+                            onClick={this.toggleEditModal}>
+                            <FontAwesomeIcon icon={faEdit} />
+                        </Button>
+
+                        <Button
+                            variant="danger"
+                            onClick={this.handleRemove}>
+                            <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+
+                        {
+                            isEdit &&
+                            <EditTaskModal
+                                data={task}
+                                onCancel={this.toggleEditModal}
+                                from='single'
+                            />
+                        }
+                    </div> :
+                    <p>THERE IS NO TASKS!</p>
 
                 }
 
@@ -142,15 +165,16 @@ class SingleTask extends React.PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        task: state.task,
-        removeTaskSuccsess: state.removeTaskSuccsess,
-        editTaskSuccsess: state.editTaskSuccsess
+        task: state.taskReducer.task,
+        removeTaskSuccsess: state.taskReducer.removeTaskSuccsess,
+        editTaskSuccsess: state.taskReducer.editTaskSuccsess
     }
 }
 
 const mapDispatchToProps = {
     getTask,
     removeTask,
+    changeTaskStatus
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleTask);

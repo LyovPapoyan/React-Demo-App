@@ -1,3 +1,5 @@
+
+
 const defaultState = {
   tasks: [],
   task: null,
@@ -10,7 +12,7 @@ const defaultState = {
   successMessage: null,
 }
 
-export const mainReducer = (state = defaultState, action) => {
+export const taskReducer = (state = defaultState, action) => {
   switch (action.type) {
 
     case "LOADING": {
@@ -154,6 +156,15 @@ export const mainReducer = (state = defaultState, action) => {
         tasks: tasks,
         removeTasksSuccsess: true,
         successMessage: "Tasks removed successfully"
+      }
+    }
+
+
+    case "LOGOUT_SUCCES": {
+      return {
+        ...state,
+        loading: false,
+        error: null
       }
     }
 

@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 
 import { Row, Col, Container, Button } from 'react-bootstrap';
 
+import Search from '../../components/Search/Search'
 import NewTaskModal from '../../components/NewTaskModal/NewTaskMOdal';
 import Task from '../../components/Task/Task';
 import Confirm from '../../components/Confirm';
 import EditTaskModal from '../../components/EditTaskModal';
 
-import {getTasks, removeTasks, editTask} from '../../store/actions'
+import {getTasks, removeTasks, editTask} from '../../store/taskActions'
 
  class Todo extends React.PureComponent {
 
@@ -209,6 +210,7 @@ import {getTasks, removeTasks, editTask} from '../../store/actions'
 
         return (
             <Container>
+            <Search/>
                 <Row>
                     <Col className="text-center m-3">
                         <Button
@@ -267,10 +269,10 @@ import {getTasks, removeTasks, editTask} from '../../store/actions'
 
 const mapStateToProps = (state) => {
     return {
-        tasks: state.tasks,
-        addTaskSuccsess: state.addTaskSuccsess,
-        removeTasksSuccsess: state.removeTasksSuccsess,
-        editTaskSuccsess: state.editTaskSuccsess
+        tasks: state.taskReducer.tasks,
+        addTaskSuccsess: state.taskReducer.addTaskSuccsess,
+        removeTasksSuccsess: state.taskReducer.removeTasksSuccsess,
+        editTaskSuccsess: state.taskReducer.editTaskSuccsess
     }
 }
 

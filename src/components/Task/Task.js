@@ -8,8 +8,8 @@ import styles from "./Task.module.css";
 import { Link } from 'react-router-dom';
 
 import {connect} from 'react-redux';
-import {removeTask, changeTaskStatus} from '../../store/actions'
-
+import {removeTask, changeTaskStatus} from '../../store/taskActions'
+    
 
  class Task extends React.PureComponent {
 

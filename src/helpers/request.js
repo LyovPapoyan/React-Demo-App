@@ -1,8 +1,11 @@
+import {getJWT} from './auth';
+
 function request(url, method='GET', body){
     const config = {
         method: method,
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            "Authorization": `Bearer ${getJWT()}`
         }
     };
 
