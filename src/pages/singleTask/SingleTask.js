@@ -99,9 +99,6 @@ class SingleTask extends React.PureComponent {
         const { isEdit } = this.state;
         let { task,  changeTaskStatus } = this.props;
        
-       console.log("task " + task);
-       console.log(this.props);
-       
         return (
             <>
                 { task ?
@@ -118,14 +115,14 @@ class SingleTask extends React.PureComponent {
                         <p>{task.status}</p>
 
                         {task.status === 'done' ?
-                            <Button className='m-1'
+                            <Button 
                                 variant="warning"
-                                onClick={() => changeTaskStatus(task._id, { status: 'active' })}
+                                onClick={() => changeTaskStatus(task._id, { status: 'active' }, 'single')}
                                 disabled={this.props.disabled}>
                                 <FontAwesomeIcon icon={faHistory} title="Active" />
                             </Button>
                             :
-                            <Button className='m-1'
+                            <Button 
                                 variant="success"
                                 onClick={() => changeTaskStatus(task._id, { status: 'done' }, 'single')}
                                 disabled={this.props.disabled}>
@@ -133,16 +130,16 @@ class SingleTask extends React.PureComponent {
                             </Button>
                         }
 
-                        <Button className='mr-4'
+                        <Button className='m-3'
                             variant="info"
                             onClick={this.toggleEditModal}>
-                            <FontAwesomeIcon icon={faEdit} />
+                            <FontAwesomeIcon icon={faEdit} title="Edit" />
                         </Button>
 
                         <Button
                             variant="danger"
                             onClick={this.handleRemove}>
-                            <FontAwesomeIcon icon={faTrash} />
+                            <FontAwesomeIcon icon={faTrash} title="Delete" />
                         </Button>
 
                         {
