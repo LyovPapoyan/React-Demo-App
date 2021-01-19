@@ -1,4 +1,4 @@
-import request from '../request';
+import request from '../helpers/request';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -37,8 +37,8 @@ export function getTasks(params= {}) {
     return (dispatch) => {
 
         dispatch({type: "LOADING"})
-
-        request(url)
+        
+        request(url)        
         .then(tasks => {
             dispatch({type: "GET_TASKS_SUCCES", tasks})
         })
@@ -137,5 +137,26 @@ export function removeTasks(data) {
         })
     }
 
+}
+
+
+export function logout () {
+    return (dispatch) => {
+
+        dispatch({type: "AUTH_LOADING"})
+
+        const token = localStorage.getItem('token');
+        const parsed = JSON.parse(token).jwt;
+        console.log('url======== ' + apiUrl);
+        request(`${apiUrl}/user/sign-out`, "POST", {jwt: parsed})
+        .then(() => {
+            localStorage.removeItem('token');
+             dispatch({type: "LOGOUT_SUCCES" });
+            //  history.push('/login')
+        })
+        .catch(err => {
+            dispatch({type: "AUTH_FAILED", error: err.message})
+        })
+    }
    
 }

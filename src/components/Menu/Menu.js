@@ -1,9 +1,9 @@
-import React  from 'react';
+import React from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
 import styles from './Menu.module.css';
 import { connect } from 'react-redux';
-import {logout} from '../../store/userActions'
+import { logout } from '../../store/userActions'
 
 
 
@@ -14,23 +14,17 @@ function Menu(props) {
     return (
         <>
             <Navbar bg="dark" variant="dark">
-                {
-                    isAuth ?
-                        <Link to="/">
-                            <Navbar.Brand >LOGO</Navbar.Brand>
-                        </Link> :
-                        <Navbar.Brand >LOGO</Navbar.Brand>
-                }
+
+                <Link to="/">
+                    <Navbar.Brand >LOGO</Navbar.Brand>
+                </Link>
 
                 <Nav>
-                    {
-                        isAuth &&
-                        <NavLink to="/"
-                            exact
-                            activeClassName={styles.isActive}>
-                            Home
+                    <NavLink to="/"
+                        exact
+                        activeClassName={styles.isActive}>
+                        Home
                     </NavLink>
-                    }
 
                     <NavLink to="/about"
                         exact

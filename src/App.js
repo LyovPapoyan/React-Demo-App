@@ -12,12 +12,14 @@ import NotFound from './pages/not-found/Not-found';
 import SingleTask from './pages/singleTask/SingleTask';
 import Spinner from './components/Spinner/Spinner'
 // import  './components/Spinner/Spinner.module.css'
+import CustomRoute from './components/Router/CustomRoute';
 
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {connect} from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
 
 
 
@@ -50,12 +52,12 @@ class App extends React.PureComponent {
         {/* <Search/> */}
         {(this.props.taskLoading || this.props.authLoading) && <Spinner/>} 
         <Switch>
-          <Route path="/" component={ToDo} exact />
-          <Route path="/task/:id" component={SingleTask} exact />
+          <CustomRoute type='private' path="/" component={ToDo} exact />
+          <CustomRoute type='private' path="/task/:id" component={SingleTask} exact />
           <Route path="/about" component={About} exact />
           <Route path="/contacts" component={Contact} exact />
-          <Route path="/registration" component={Registration} exact />
-          <Route path="/login" component={Login} exact />
+          <CustomRoute path="/registration" component={Registration} exact />
+          <CustomRoute path="/login" component={Login} exact />
           <Route path="/not-found" component={NotFound} exact />
           <Redirect to="/not-found" component={NotFound} />
         </Switch>

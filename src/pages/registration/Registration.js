@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import styles from './Registration.module.css';
 import {register} from '../../store/userActions';
@@ -6,11 +6,6 @@ import {connect} from 'react-redux';
 
 function Registration(props) {
 
-    useEffect(() => {
-        if(props.registerSuccses) {
-            props.history.push('/login');
-        }
-    }, [props.registerSuccses, props.history])
 
     const [values, setValues] = useState({
         email: '',
@@ -193,15 +188,9 @@ function Registration(props) {
     );
 }
 
-const mapStateToProps = (state) => {
-    return {
-      registerSuccses: state.authReducer.registerSuccses
-    }
-}
-
 const mapDispatchToProps = {
     register
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Registration);
+export default connect(null, mapDispatchToProps)(Registration);
 

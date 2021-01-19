@@ -41,8 +41,8 @@ export const authReducer = (state = defaultState, action) => {
       return {
       ...state,
       authLoading: false,
-      registerSuccses: true,
-      authSuccessMessage: 'You have succsesfully registration' 
+      authSuccessMessage: 'You have succsesfully registration',
+      userId: action.userId
     }
   }
 
@@ -58,7 +58,8 @@ export const authReducer = (state = defaultState, action) => {
       return {
       ...state,
       authLoading: false, 
-      isAuth: false
+      isAuth: false,
+      authError: null,
     }
   }
 
