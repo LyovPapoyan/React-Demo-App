@@ -159,12 +159,11 @@ export const taskReducer = (state = defaultState, action) => {
       }
     }
 
-
-    case "LOGOUT_SUCCES": {
+    case "AUTH_LOADING" : {
       return {
         ...state,
-        loading: false,
-        error: null
+        error: null,
+        successMessage: null,
       }
     }
 
