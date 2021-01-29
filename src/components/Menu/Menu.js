@@ -1,54 +1,81 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
 import styles from './Menu.module.css';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
-import { logout } from '../../store/userActions'
+import { logout, getUserInfo } from '../../store/userActions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 
 function Menu(props) {
 
-    const { isAuth, logout } = props;
+    const { isAuth, logout, getUserInfo, user } = props;
 
+    useEffect(() => {
+        if(isAuth) {
+            getUserInfo();
+        }
+       
+    }, [getUserInfo, isAuth,]);
+
+    
     return (
         <>
-            <Navbar bg="dark" variant="dark">
-
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Link to="/">
-                    <Navbar.Brand >LOGO</Navbar.Brand>
+                    <Navbar.Brand className={styles.logo}>LOGO</Navbar.Brand>
                 </Link>
+                <Navbar.Collapse id="responsive-navbar-nav">
 
-                <Nav>
-                    <NavLink to="/"
-                        exact
-                        activeClassName={styles.isActive}>
-                        Home
+                    <Nav className="mr-auto">
+                        {
+                            isAuth &&
+
+                            <NavLink to="/"
+                                exact
+                                activeClassName={styles.isActive}>
+                                Home
                     </NavLink>
 
-                    <NavLink to="/about"
-                        exact
-                        activeClassName={styles.isActive}>
-                        About
+                        }
+
+                        <NavLink to="/about"
+                            exact
+                            activeClassName={styles.isActive}>
+                            About
                     </NavLink>
-                    <NavLink to="/contacts"
-                        exact
-                        activeClassName={styles.isActive}>
-                        Contacts
+
+
+
+                        <NavLink to="/contacts"
+                            exact
+                            activeClassName={styles.isActive}>
+                            Contacts
                     </NavLink>
-                </Nav>
+
+
+                    </Nav>
+                </Navbar.Collapse>
 
                 {isAuth ?
-                    <Button className='btn-danger ml-auto' onClick={logout}>LogOut</Button> :
+                    <>
+                        <Button variant='outline-danger ml-auto' onClick={logout}>LogOut</Button>
+                        <FontAwesomeIcon icon={faUser} className={styles.icon} title={user? user.name + " " + user.surname : null} />
+                    </>
+                    :
                     <>
                         <Link to='/login' className='ml-auto'>
-                            <Button className='primary'>Login</Button>
+                            <Button variant='outline-primary'>Login</Button>
                         </Link>
-                        <Link to='/registration' className='m-2'>
-                            <Button className='btn-danger'>Registration</Button>
+                        <Link to='/registration' className='ml-2'>
+                            <Button variant='outline-success'>Registration</Button>
                         </Link>
 
                     </>
+
                 }
 
             </Navbar>
@@ -58,12 +85,14 @@ function Menu(props) {
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.authReducer.isAuth
+        isAuth: state.authReducer.isAuth,
+        user: state.authReducer.userInfo
     }
 };
 
 const mapDispatchToProps = {
-    logout
+    logout,
+    getUserInfo
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

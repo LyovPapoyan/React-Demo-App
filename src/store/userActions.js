@@ -13,7 +13,7 @@ export function register(data) {
 
        registerRequest(data)
         .then(response => {
-             dispatch({type: "REGISTER_SUCCES", response, userId: response._id });
+             dispatch({type: "REGISTER_SUCCES", response });
              history.push('/login');
         })
         .catch(err => {
@@ -37,21 +37,48 @@ export function login (data) {
         .catch(err => {
             dispatch({type: "AUTH_FAILED", error: err.message})
         })
+        
     }
    
 }
 
 
 export function logout () {
+
+    return async (dispatch) => {
+
+        dispatch({type: "AUTH_LOADING"});
+
+        const jwt = getJWT()
+        if(jwt) {
+            request(`${apiUrl}/user/sign-out`, "POST", {jwt: await jwt})   
+            .then(() => {
+                localStorage.removeItem('token');
+                 dispatch({type: "LOGOUT_SUCCES" });
+                 history.push('/login')
+            })
+            .catch(err => {
+                dispatch({type: "AUTH_FAILED", error: err.message})
+            })
+        } else {
+            dispatch({type: "LOGOUT_SUCCES" });
+            history.push('/login')
+        }
+       
+      
+    }
+   
+}
+
+
+export function getUserInfo () {
     return (dispatch) => {
 
         dispatch({type: "AUTH_LOADING"})
 
-        request(`${apiUrl}/user/sign-out`, "POST", {jwt: getJWT()})
-        .then(() => {
-            localStorage.removeItem('token');
-             dispatch({type: "LOGOUT_SUCCES" });
-             history.push('/login')
+       request(`${apiUrl}/user`)
+        .then(data => {
+             dispatch({type: "GET_USERINFO_SUCCES", userInfo: data });
         })
         .catch(err => {
             dispatch({type: "AUTH_FAILED", error: err.message})

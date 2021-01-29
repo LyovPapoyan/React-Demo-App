@@ -1,20 +1,19 @@
 function checkLoginStatus() {
   const token = localStorage.getItem('token');
-  if(!token) {
+  if (!token) {
     return false;
   } else {
-    // stugel jamket@
     return true;
   }
 }
 
-const defaultState = { 
+const defaultState = {
   authLoading: false,
   authError: null,
-  userId: null,
   authSuccessMessage: null,
   registerSuccses: false,
-  isAuth: checkLoginStatus()
+  isAuth: checkLoginStatus(),
+  userInfo: null
 }
 
 export const authReducer = (state = defaultState, action) => {
@@ -39,29 +38,37 @@ export const authReducer = (state = defaultState, action) => {
 
     case "REGISTER_SUCCES": {
       return {
-      ...state,
-      authLoading: false,
-      authSuccessMessage: 'You have succsesfully registration',
-      userId: action.userId
+        ...state,
+        authLoading: false,
+        authSuccessMessage: 'You have succsesfully registration',
+      }
     }
-  }
 
     case "LOGIN_SUCCES": {
       return {
-      ...state,
-      authLoading: false, 
-      isAuth: true
+        ...state,
+        authLoading: false,
+        isAuth: true
+      }
     }
-  }
 
     case "LOGOUT_SUCCES": {
       return {
-      ...state,
-      authLoading: false, 
-      isAuth: false,
-      authError: null,
+        ...state,
+        authLoading: false,
+        isAuth: false,
+        authError: null,
+        userInfo: null
+      }
     }
-  }
+
+    case "GET_USERINFO_SUCCES": {
+      return {
+        ...state,
+        authLoading: false,
+        userInfo: action.userInfo
+      }
+    }
 
     default: return state;
   }

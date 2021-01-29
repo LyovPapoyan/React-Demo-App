@@ -1,11 +1,20 @@
 import {getJWT} from './auth';
 
-function request(url, method='GET', body){
+const defaultError = {message :'Something went wrong'};
+
+
+async function request(url, method='GET', body){
+    const jwt = await getJWT();
+    
+    if(!getJWT()) {
+        return Promise.reject(defaultError);
+    }
+
     const config = {
         method: method,
         headers: {
             "Content-type": "application/json",
-            "Authorization": `Bearer ${getJWT()}`
+            "Authorization": `Bearer ${jwt}`
         }
     };
 

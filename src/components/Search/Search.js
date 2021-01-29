@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputGroup, FormControl, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-// import styles from './Search.module.css'
+import styles from './Search.module.css'
 import { connect } from 'react-redux';
 import { getTasks } from '../../store/taskActions';
 import DatePicker from 'react-datepicker';
@@ -115,7 +115,7 @@ function Search(props) {
     };
 
     return (
-        <div className="w-100 mt-3 p-3">
+        <div className={styles.wrapper}>
             <InputGroup className="mb-3">
                 <FormControl
                     placeholder="Search for a task..."
@@ -124,14 +124,14 @@ function Search(props) {
                     value={search}
                 />
 
-                <DropdownButton
+                <DropdownButton 
                     as={InputGroup.Append}
                     variant="outline-secondary"
                     title={status.value ? status.label : "Status"}
                 >
                     {
                         statusOptions.map((option, index) =>
-                            <Dropdown.Item
+                            <Dropdown.Item className={styles.dropdownItem_status}
                                 key={index}
                                 active={status.value === option.value}
                                 onClick={() => setStatus(option)}
@@ -143,15 +143,14 @@ function Search(props) {
 
                 </DropdownButton>
 
-
-                <DropdownButton
+                <DropdownButton  
                     as={InputGroup.Append}
                     variant="outline-secondary"
                     title={sort.value ? sort.label : "Sort"}
                 >
                     {
                         sortOptions.map((option, index) =>
-                            <Dropdown.Item
+                            <Dropdown.Item className={styles.dropdownItem_sort}
                                 key={index}
                                 active={sort.value === option.value}
                                 onClick={() => setSort({...option})}
@@ -173,13 +172,14 @@ function Search(props) {
           </Button>
                 </InputGroup.Append>
             </InputGroup>
-
+                    <div className={styles.time_sort}>
             {
                 dateOptions.map(option =>
                     <div
+                    className={styles.time_sort_item}
                     key={option.value}
                     >
-                        <span className='mr-2'>{option.label}:</span>
+                        <p >{option.label}:</p>
                         <DatePicker 
                         selected = {dates[option.value]}
                         onChange={(value) => setDates({
@@ -190,7 +190,7 @@ function Search(props) {
                     </div>
                 )
             }
-
+            </div>
 
         </div>
     )

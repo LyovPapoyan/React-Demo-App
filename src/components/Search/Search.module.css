@@ -1,10 +1,40 @@
-.date_block {
-   display: flex;
-   flex-direction: row;
-  
+.wrapper {
+    margin-top: 15px;
+    width: 100%;
 }
 
-.react-datepicker-wrapper {
-    border-radius: 50%;
-    border: 3px solid red;
+
+.dropdownItem_status {
+    width: 97%;
+}
+
+.dropdownItem_sort {
+    width: 99%;
+}
+
+.time_sort {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+    height: auto;
+    flex-wrap: wrap;
+}
+
+.time_sort_item {
+    margin: 5px;
+}
+
+.time_sort_item p {
+    margin-bottom: 0;
+}
+
+
+@media (max-width: 856px)  {
+
+    .time_sort {
+        width: 70%;
+        margin: 15px auto;
+        justify-content: space-around;
+    }
+
 }

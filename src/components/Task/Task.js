@@ -37,6 +37,7 @@ import {removeTask, changeTaskStatus} from '../../store/taskActions'
         let {status} = this.props.data;
 
         return (
+            <div className="wrapper">
             <Card className={`${styles.card} ${checked ? styles.checked : null}  ${status === 'done' ? styles.done : styles.active}`}>
                 <input type="checkbox"
                     className={styles.checkbox}
@@ -90,6 +91,7 @@ import {removeTask, changeTaskStatus} from '../../store/taskActions'
                     </Button>
                 </Card.Body>
             </Card>
+            </div>
         );
     };
 };
