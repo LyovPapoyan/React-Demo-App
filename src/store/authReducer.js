@@ -13,7 +13,8 @@ const defaultState = {
   authSuccessMessage: null,
   registerSuccses: false,
   isAuth: checkLoginStatus(),
-  userInfo: null
+  userInfo: null,
+  contactResponseSuccses: null
 }
 
 export const authReducer = (state = defaultState, action) => {
@@ -67,6 +68,15 @@ export const authReducer = (state = defaultState, action) => {
         ...state,
         authLoading: false,
         userInfo: action.userInfo
+      }
+    }
+
+    case "CONTACT_FORM_SUCCES" : {
+      return {
+        ...state,
+        authLoading: false,
+        authError: null,
+        authSuccessMessage: "We will contact you"
       }
     }
 

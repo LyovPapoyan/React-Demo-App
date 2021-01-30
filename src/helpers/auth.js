@@ -53,6 +53,10 @@ export function registerRequest(data) {
     return request(data, 'register');
 }
 
+export function postForm(data) {
+    return request(data, 'contact')
+}
+
 
 
 function request(data, type) {
@@ -70,6 +74,9 @@ function request(data, type) {
     }
     else if (type === 'register') {
         url = `${apiUrl}/user`;
+    }
+    else if (type === 'contact') {
+        url = `${apiUrl}/form`;
     }
 
     return fetch(url, config)

@@ -85,7 +85,7 @@ const mapStateToProps = (state) => {
     taskLoading: state.taskReducer.loading,
     authLoading: state.authReducer.authLoading,
     authErrorMessage: state.authReducer.authError,
-    authSuccessMessage: state.authReducer.authSuccessMessage
+    authSuccessMessage: state.authReducer.authSuccessMessage,
   }
 }
 

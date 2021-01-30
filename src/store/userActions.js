@@ -1,6 +1,6 @@
 import request from '../helpers/request';
 import {getJWT} from '../helpers/auth';
-import {registerRequest, loginRequest} from '../helpers/auth';
+import {registerRequest, loginRequest, postForm} from '../helpers/auth';
 import {history} from '../index'
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -83,6 +83,24 @@ export function getUserInfo () {
         .catch(err => {
             dispatch({type: "AUTH_FAILED", error: err.message})
         })
+    }
+   
+}
+
+
+export function postContactForm (data) {
+    return (dispatch) => {
+
+        dispatch({type: "AUTH_LOADING"})
+
+       postForm(data)
+        .then(response => {
+             dispatch({type: "CONTACT_FORM_SUCCES" })
+        })
+        .catch(err => {
+            dispatch({type: "AUTH_FAILED", error: err.message})
+        })
+        
     }
    
 }
