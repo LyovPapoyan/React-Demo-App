@@ -1,3 +1,8 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
 .checkbox {
     margin: 10px;
 }
@@ -17,7 +22,7 @@
 }
 
 .active {
-    border: 1px solid blue;
+    border: 1px solid grey;
 }
 
 .done {
@@ -36,4 +41,15 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+}
+
+
+@media (max-width: 400px) {
+    .card {
+        width: 90%;
+        margin: 8px auto;
+    }
+    .desc {
+        width: 240px;
+    }
 }

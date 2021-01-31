@@ -1,5 +1,6 @@
+
  a{
-    margin-left: 20px;
+    margin-left: 15px;
     color: aliceblue;
 }
 
@@ -8,3 +9,31 @@
     font-weight: bold;
 }
 
+.icon {
+    color: white;
+    font-size: 25px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+
+@media (max-width: 988px) {
+    a {
+        margin-top: 5px;
+        font-size: 20px;
+        margin-left: 5px;
+    }
+    .logo {
+        margin-left: 10px;
+    }
+}
+
+@media (max-width: 355px) {
+    .btn {
+       font-size: 0.5rem;
+    }
+
+    .logo {
+        display: none;
+    }
+}

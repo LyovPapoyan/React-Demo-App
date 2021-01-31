@@ -1,17 +1,14 @@
 import React from 'react';
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Registration from './pages/registration/Registration'
 import Login from './pages/login/Login'
 import Menu from './components/Menu/Menu'
-// import Search from './components/Search/Search'
 import ToDo from './pages/Todo/ToDo';
 import About from './pages/about/About';
 import Contact from './pages/contacts/Contact';
 import NotFound from './pages/not-found/Not-found';
 import SingleTask from './pages/singleTask/SingleTask';
 import Spinner from './components/Spinner/Spinner'
-// import  './components/Spinner/Spinner.module.css'
 import CustomRoute from './components/Router/CustomRoute';
 
 import {ToastContainer, toast} from 'react-toastify';
@@ -19,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import {connect} from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Footer from './components/footer/Footer';
 
 
 
@@ -47,9 +45,8 @@ class App extends React.PureComponent {
   render() {
 
     return (
-      <>
+      <div>
         <Menu />
-        {/* <Search/> */}
         {(this.props.taskLoading || this.props.authLoading) && <Spinner/>} 
         <Switch>
           <CustomRoute type='private' path="/" component={ToDo} exact />
@@ -71,9 +68,9 @@ class App extends React.PureComponent {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-        />
-      
-      </>
+        />      
+      <Footer/>
+      </div>
     );
 
   }
@@ -88,7 +85,7 @@ const mapStateToProps = (state) => {
     taskLoading: state.taskReducer.loading,
     authLoading: state.authReducer.authLoading,
     authErrorMessage: state.authReducer.authError,
-    authSuccessMessage: state.authReducer.authSuccessMessage
+    authSuccessMessage: state.authReducer.authSuccessMessage,
   }
 }
 

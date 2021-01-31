@@ -1,0 +1,16 @@
+.container {
+    width: 90%;
+    margin: 0 auto;
+    min-height:calc(100vh - 140px) ;
+}
+
+.removeSelected {
+    margin-left: 5px;
+}
+
+
+@media (max-width: 381px){
+    .removeSelected {
+        margin-top: 5px;
+    }
+}

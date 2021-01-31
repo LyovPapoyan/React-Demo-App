@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Row, Col, Container, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 
 import Search from '../../components/Search/Search'
 import NewTaskModal from '../../components/NewTaskModal/NewTaskMOdal';
 import Task from '../../components/Task/Task';
 import Confirm from '../../components/Confirm';
 import EditTaskModal from '../../components/EditTaskModal';
-
+import styles from './Todo.module.css';
 import {getTasks, removeTasks, editTask} from '../../store/taskActions'
 
  class Todo extends React.PureComponent {
@@ -209,7 +209,7 @@ import {getTasks, removeTasks, editTask} from '../../store/taskActions'
             );
 
         return (
-            <Container>
+            <div className={styles.container}>
             <Search/>
                 <Row>
                     <Col className="text-center m-3">
@@ -220,7 +220,19 @@ import {getTasks, removeTasks, editTask} from '../../store/taskActions'
                         >
                             Add new Task
                        </Button>
+                       { this.props.tasks.length !== 0 &&
+                        <Button 
+                        className={styles.removeSelected}
+                        variant="danger"
+                            disabled={size ? false : true}
+                            onClick={this.toggleConfirm}
+                        >
+                            Remove Selected Tasks
+                    </Button>
+                       
+                       }
                     </Col>
+                    
                 </Row>
 
                 <Row>
@@ -229,16 +241,7 @@ import {getTasks, removeTasks, editTask} from '../../store/taskActions'
                     }
                 </Row>
 
-                { this.props.tasks.length !== 0 &&
-                    <Row className="justify-content-center">
-                        <Button variant="danger"
-                            disabled={size ? false : true}
-                            onClick={this.toggleConfirm}
-                        >
-                            Remove Selected Tasks
-                    </Button>
-                    </Row>
-                }
+               
                 { this.state.showConfirm ?
                     <Confirm
                         count={size}
@@ -262,7 +265,7 @@ import {getTasks, removeTasks, editTask} from '../../store/taskActions'
                         onCancel={this.toggleNewTaskModal}
                     />
                 }
-            </Container>
+            </div>
         )
     }
 }

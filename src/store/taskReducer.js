@@ -167,6 +167,11 @@ export const taskReducer = (state = defaultState, action) => {
       }
     }
 
+    case "LOGOUT_SUCCES" : {
+      return defaultState
+    }
+
+    
     default: return state;
   }
 }

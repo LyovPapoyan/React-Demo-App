@@ -1,0 +1,7 @@
+.container {
+    min-height:calc(100vh - 135px);
+}
+
+.invalid{
+    border: 1px solid red;
+}

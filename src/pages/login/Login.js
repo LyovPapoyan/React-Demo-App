@@ -32,7 +32,8 @@ function Login(props) {
         });
 
         if(email && password) {
-           props.login(values)
+           props.login(values);
+           
         }
     };
 
